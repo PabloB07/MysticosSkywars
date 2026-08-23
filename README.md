@@ -1,197 +1,153 @@
-<div align="center">
+# MysticosSkywars
 
-![Logo](https://i.imgur.com/MsyVYtt.png)
+Plugin de SkyWars para Spigot, Paper y Purpur. Incluye múltiples arenas, modos SOLO y TEAMS, menús GUI, kits, tiendas, votaciones, fiestas, estadísticas, logros, leaderboards y soporte para arenas normales o basadas en esquemas.
 
-## RealSkywars
+## Características
 
-### A SkyWars plugin that's been coded on the recent 1.14 API
+- Mensajes, menús, scoreboard y nombres de ítems con MiniMessage.
+- Idioma predeterminado: Español (`es_es`).
+- PlaceholderAPI, Vault, DecentHolograms y HolographicDisplays.
+- ItemsAdder para ítems de lobby, kits, tiendas y recompensas.
+- LuckyBlock configurable con múltiples bloques y recompensas ponderadas.
+- BungeeCord y Velocity mediante el canal compatible de BungeeCord.
+- Persistencia SQLite, MySQL, MariaDB y otros motores soportados por ORMLite.
+- Soporte de WorldEdit y FAWE.
 
-[![Build](https://img.shields.io/github/actions/workflow/status/joserodpt/RealSkywars/maven.yml?branch=master)](https://github.com/joserodpt/RealSkywars/actions)
-![Issues](https://img.shields.io/github/issues-raw/joserodpt/RealSkywars)
-[![Stars](https://img.shields.io/github/stars/joserodpt/RealSkywars)](https://github.com/joserodpt/RealSkywars/stargazers)
-[![Chat)](https://img.shields.io/discord/817810368649887744?logo=discord&logoColor=white)](https://discord.gg/t7gfnYZKy8)
+## Dependencias
 
-<a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/compact/supported/spigot_46h.png" height="35"></a>
-<a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/compact/supported/paper_46h.png" height="35"></a>
-<a href="/#"><img src="https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/compact/supported/purpur_46h.png" height="35"></a>
+Dependencia obligatoria:
 
-</div>
+- WorldEdit o FastAsyncWorldEdit.
 
-----
+Dependencias opcionales:
 
-A New SkyWars plugin that's been coded on the **1.14 API**.
-**Version support**:
+- PlaceholderAPI
+- ItemsAdder
+- Vault
+- DecentHolograms
+- HolographicDisplays
+- Multiverse-Core o My_Worlds
+- RealPermissions
 
-- 1.14.4 [v1_14_R1]
-- 1.15.2 [v1_15_R1]
-- 1.16.5 [v1_16_R3]
-- 1.17.1 [v1_17_R1]
-- 1.18.2 [v1_18_R2]
-- 1.19.4 [v1_19_R3]
-- 1.20.6 [v1_20_R3]
+LuckyBlock e ItemsAdder se detectan de forma opcional; el plugin no requiere sus APIs para iniciar.
 
----
+## Compilación
 
-# Features
+Desde la raíz del proyecto:
 
-- Multi-language and Multi-arena support.
-- Default and Schematic arenas support.
-- SOLO and TEAMS arenas.
-- Cage Blocks, Bow Trails and Win Blocks.
-- Custom animations and game events.
-- Party system built in.
-- GUI based management and interaction system.
-- Sign maps supported.
-- Configurable messages.
-- 3 configurable tiersw.
-- Game history logging.
-- Chest, Time and Projectile voting per arena.
-- SQLLite, MySQL, MariaDB and other database solutions supported.
-- Tab costumizing option.
-- Achievements and Leaderboards.
-- Supports PlaceholderAPI for custom placeholder injection.
-- Hooks onto DecentHolograms and HolographicDisplays
-- API System.
+```bash
+mvn -pl mysticosskywars-plugin -am clean package
+```
 
-# Dependencies
+El plugin compilado se genera en `mysticosskywars-plugin/target/`.
 
-RealSkywars depends on **FastAsyncWorldEdit or WorldEdit**.
-RealSkywars softdepends on: **Multiverse-Core, My_Worlds, HolographicDisplays, DecentHolograms, PlaceholderAPI**
+## Comandos principales
 
-## Permissions
+El comando principal es `/msw`; también existe `/mysticosskywars`.
 
-All major and admin related permissions are assigned to: **rsw.admin**
-Default Kits have the permission: **rsw.SWKit**
-Permissions to vote:
-|What is the player voting for?|Permission|
-|--|--|
-| Basic Chest Tier |rsw.basic|
-| Normal Chest Tier |rsw.normal|
-| Epic Chest Tier |rsw.epic|
-| Game Time Day |rsw.day|
-| Game Time Sunset|rsw.sunset|
-| Game Time Night|rsw.night|
-| Game Normal Projectiles |rsw.normal-projectile|
-| Game Break Projectiles |rsw.break-projectile|
+| Comando | Descripción |
+|---|---|
+| `/msw` | Abre el menú principal o de mapas. |
+| `/msw list` | Lista las arenas. |
+| `/msw kits` | Abre el menú de kits. |
+| `/msw shop` | Abre la tienda. |
+| `/msw play` | Busca una partida disponible. |
+| `/msw leave` | Abandona la partida actual. |
+| `/msw forcestart` | Fuerza el inicio de la partida. |
+| `/msw create <nombre> <tipo> <jugadores>` | Crea una arena SOLO. |
+| `/msw register <nombre>` | Registra una arena. |
+| `/msw edit <nombre>` | Edita una arena. |
+| `/msw finish` | Guarda la configuración de la arena. |
+| `/msw setspectator` | Define la ubicación de espectadores. |
+| `/msw reload` | Recarga la configuración. |
+| `/party create` | Crea una fiesta. |
 
-## Commands
+La mayoría de funciones administrativas requieren `msw.admin`.
 
-**/rsw create** - Creates a new map.
-Permission: rsw.admin
+## Crear una arena
 
-**/rsw unregister** - Unregisters a map.
-Permission: rsw.admin
+1. Ejecuta `/msw create nombre default 8` o `/msw create nombre schematic 8`.
+2. Configura la arena desde el menú y guarda los cambios.
+3. Coloca las jaulas y los cofres usando los objetos de administración.
+4. Define la ubicación de espectadores con `/msw setspectator`.
+5. Define los límites con WorldEdit (`//pos1`, `//pos2` y `//expand vert`).
+6. Ejecuta `/msw finish`.
 
-**/rsw edit** - Edits a map (cage and chest add/removal)
-Permission: rsw.join
+Para una arena basada en esquema, coloca el archivo `.schem` en la carpeta `MysticosSkywars/maps` del servidor.
 
-**/rsw register** - Registers a map.
-Permission: rsw.join
+## LuckyBlock
 
-**/rsw delete** - Deletes a map.
-Permission: rsw.admin
+La configuración está en `plugins/MysticosSkywars/config.yml`, dentro de `Config.LuckyBlock`.
 
-**/rsw list** - Opens the maps menu
-Permission: rsw.join
+LuckyBlock solo se procesa dentro de una partida activa:
 
-**/rsw kits** - Opens the kits menu
-Permission: rsw.kits
+```yaml
+LuckyBlock:
+  Enabled: true
+  Break-In-Match-Only: true
+  Blocks:
+    - SPONGE
+    - GOLD_BLOCK
+    - "ITEMSADDER:luckyblocks:lucky_block"
+  Rewards-Per-Break: 3
+```
 
-**/rsw shop** - Opens the shop menu
-Permission: rsw.shop
+Tipos de recompensa disponibles:
 
-**/rsw coins** - Sends the players current balance.
-Permission: rsw.coins
+```yaml
+Rewards:
+  - "WEIGHT=10|ITEM:MATERIAL=DIAMOND;AMOUNT=2;NAME=<aqua>Diamantes"
+  - "WEIGHT=5|EFFECT:SPEED;DURATION=240;AMPLIFIER=2"
+  - "WEIGHT=3|COMMAND:give %player% firework_rocket 16"
+  - "WEIGHT=1|EXPLOSION:2.0"
+  - "WEIGHT=6|ITEM:MATERIAL=ITEMSADDER:luckyblocks:coin;AMOUNT=1;NAME=<yellow>Moneda"
+```
 
-**/rsw lobby** - Teleport to the lobby.
-Permission: rsw.lobby
+`WEIGHT` controla la probabilidad relativa. `Rewards-Per-Break: 0` abre todas las recompensas configuradas; no existe un límite fijo de recompensas.
 
-**/rsw forcestart** - Force starts the current match.
-Permission: rsw.forcestart
+## ItemsAdder
 
-**/rsw leave** - Leaves the current match.
-Permission: rsw.leave
+Los ítems personalizados se pueden usar en configuraciones que acepten `MATERIAL`:
 
-**/party create** - Creates a party.
-Permission: rsw.party.owner
+```yaml
+MATERIAL: "ITEMSADDER:namespace:id"
+```
 
-**/party disband** - Disbands a party.
-Permission: rsw.party.owner
+También pueden utilizarse como bloques LuckyBlock mediante la lista `Config.LuckyBlock.Blocks`.
 
-**/party kick** - Disbands a party.
-Permission: rsw.party.owner
+## MiniMessage
 
-**/party invite** - Disbands a party.
-Permission: rsw.party.invite
+Los textos aceptan MiniMessage:
 
-**/party accept** - Accepts a party invite.
-Permission: rsw.party.accept
+```yaml
+Prefix: "<white>Mysticos<aqua>Skywars <dark_gray>» <reset>"
+```
 
-**/party leave** - Accepts a party invite.
-Permission: rsw.party.leave
+Los colores antiguos con `&` siguen siendo compatibles para facilitar la migración de configuraciones existentes.
 
-## Creating an Arena
+## BungeeCord y Velocity
 
-1. Use **/rsw create name type players** or /**rsw create name type number of teams players-per-team**
-2. A GUI will appear. Click on the settings to change then, and then save the changes.
-3. RealSkywars will attempt to generate a world and, if sucessfull, it will teleport the player to the world.
-4. If the game is SHEMATIC based, RealSkywars will try to paste the shematic provided in the arena name.
-5. Set normal, mid chests and cages with the items on the hotbar.
-6. Set the spectator location with /rsw setspectator.
-7. Set the arena boundaries with //pos1 or //pos2 or with the worldedit axe.
-   > NOTE: Don't forget to do //expand vert to cover the entire arena height.
-8. Save the arena with /rsw finish
+Activa el modo proxy en `config.yml`:
 
-## Creating a game sign
+```yaml
+Bungeecord:
+  Enabled: true
+  Proxy-Type: AUTO
+  Lobby-Server: lobby
+```
 
-Once the arena is fully registered, you can place a sign with the following content to link it to the arena.
-
-Line 1: [rsw]
-
-Line 2: -map name-
-
-## Creating a schematic from a world with WorldEdit
-
-1. Select the area that's going to be saved as a shematic.
-2. //copy
-3. //schem save name
-4. It will be saved to the shematics directory of WorldEdit.
-5. If you want to use this schematic, you have to copy the .schem file to the RealSkywars/maps folder.
-
-----
+En Velocity debe estar habilitado el canal de mensajes compatible con BungeeCord. El servidor lobby debe coincidir con `Lobby-Server`.
 
 ## API
 
-You can access the RealSkywars API via
-the [RealSkywarsAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2FRealSkywarsAPI.java) API
-class:
+La API se obtiene con:
 
 ```java
-var rswAPI = RealSkywarsAPI.getInstance();
+MysticosSkywarsAPI api = MysticosSkywarsAPI.getInstance();
 ```
 
-You can access the plugin managers that are responsible for varios tasks in the plugin like this:
+Los managers principales incluyen mapas, jugadores, kits, tiendas, fiestas, estadísticas, base de datos, idiomas y leaderboards.
 
-```java
-var rswAPI = RealSkywarsAPI.getInstance();
-rswAPI.
+## Datos existentes
 
-getPlayerManagerAPI() and others.
-```
-
-The managers on the API are:
-[AchievementsManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FAchievementsManagerAPI.java)
-[CurrencyManager.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FCurrencyManager.java)
-[DatabaseManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FDatabaseManagerAPI.java)
-[LobbyManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FLobbyManagerAPI.java)
-[HologramManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FHologramManagerAPI.java)
-[KitManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FKitManagerAPI.java)
-[LanguageManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FLanguageManagerAPI.java)
-[LeaderboardManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FLeaderboardManagerAPI.java)
-[MapManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FMapManagerAPI.java)
-[PartiesManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FPartiesManagerAPI.java)
-[PlayerManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FPlayerManagerAPI.java)
-[ShopManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FShopManagerAPI.java)
-[WorldManagerAPI.java](realskywars-api%2Fsrc%2Fmain%2Fjava%2Fjoserodpt%2Frealskywars%2Fapi%2Fmanagers%2FWorldManagerAPI.java)
-
-----
+Las tablas SQL históricas se mantienen para evitar perder estadísticas y compras al actualizar desde versiones anteriores.

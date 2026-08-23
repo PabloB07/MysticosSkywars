@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>joserodpt.realskywars</groupId>
-    <artifactId>realskywars-parent</artifactId>
+    <groupId>joserodpt.mysticosskywars</groupId>
+    <artifactId>mysticosskywars-parent</artifactId>
     <version>1.2.1</version>
     <packaging>pom</packaging>
 
@@ -13,12 +13,12 @@
         <revision>1.7</revision>
     </properties>
     <modules>
-        <module>realskywars-plugin</module>
-        <module>realskywars-api</module>
+        <module>mysticosskywars-plugin</module>
+        <module>mysticosskywars-api</module>
     </modules>
 
-    <name>RealSkywars-Parent</name>
-    <description>Parent project for all RealSkywars modules.</description>
+    <name>MysticosSkywars-Parent</name>
+    <description>Parent project for all MysticosSkywars modules.</description>
 
     <developers>
         <developer>
@@ -31,14 +31,14 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/joserodpt/RealSkywars/issues</url>
+        <url>https://github.com/joserodpt/MysticosSkywars/issues</url>
     </issueManagement>
 
     <distributionManagement>
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/joserodpt/RealSkywars</url>
+            <url>https://maven.pkg.github.com/joserodpt/MysticosSkywars</url>
         </repository>
     </distributionManagement>
 

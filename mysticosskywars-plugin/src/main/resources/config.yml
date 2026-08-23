@@ -1,0 +1,299 @@
+Version: 14
+Debug-Mode: false
+Config:
+  Prefix: "<white>Mysticos<aqua>Skywars <dark_gray>» <reset>"
+  Languages:
+    Default-Language: es_es
+    Strings:
+      Events:
+        REFILL: "&aRefill"
+        TNTRAIN: "&cTNT &fRain"
+        BORDERSHRINK: "&5End"
+      Boss-Bar:
+        Wait: "&fWaiting players."
+        End: "&fThe match ended."
+        DeathMatch: "&5Deathmatch"
+        Run-Time: "&fTime left : &b%time%"
+        Starting: "&fStarting in &b%time% &fsecond(s)"
+      Admin-Shutdown: "&cAn admin shutdown all games."
+      BungeeCord:
+        Full: "&cThis map is full. &7Please try another one."
+        No-Available-Maps: "&cThere are currently no available maps. &7Please try again later."
+        Kick-Message: "&7Connecting to the lobby..."
+        Resetting: "&cThis map is resetting. &7Please try again later."
+      Search:
+        Not-Found: "&aEmpty"
+      Menus:
+        Filter-Button:
+          Title: "&bFilter"
+          Description: "&fClick here to filter itens on this page."
+        Next-Button:
+          Title: "&aNext"
+          Description: "&fClick here to go next."
+        Back-Button:
+          Title: "&ePrevious"
+          Description: "&fClick here to go back."
+        Main-Menu-Button:
+          Title: "&9Menu"
+          Description: "&fClick here to go to the main menu."
+  Bungeecord:
+    Enabled: false
+    # AUTO uses the BungeeCord-compatible channel, supported by BungeeCord and Velocity.
+    Proxy-Type: AUTO
+    Kick-Player: true
+    Lobby-Server: lobby
+    Map-State-As-Motd: false
+  Use-Vault-As-Currency: false
+  Invincibility-Seconds: 3
+  Auto-Teleport-To-Lobby: true
+  Scoreboard-In-Lobby: true
+  Enable-Tab-Formatting: true
+  Enable-Chat-Per-Map: false
+  Disable-Chest-Animation: false
+  Pressure-Plate-Join-Game: true
+  Shops:
+    Enable-Shop: true
+    Enable-Spectator-Shop: true
+    Enable-Kit-Shop: true
+    Only-Buy-Kits-Per-Match: false
+    Enable-Cage-Block-Shop: true
+    Enable-Win-Block-Shop: true
+    Enable-Bow-Particles-Shop: true
+  Right-Click-Player-Info: true
+  PlaceholderAPI-In-Scoreboard: false
+  MiniMessage:
+    Enabled: true
+    Strict: false
+  ItemsAdder:
+    Enabled: true
+    # Use these IDs in item sections as ITEMSADDER:namespace:id.
+    Prefix: "ITEMSADDER:"
+  LuckyBlock:
+    Enabled: true
+    # Add as many vanilla materials or ITEMSADDER:namespace:id blocks as needed.
+    Blocks:
+      - SPONGE
+      - GOLD_BLOCK
+      - EMERALD_BLOCK
+      - "ITEMSADDER:luckyblocks:lucky_block"
+    Material: SPONGE
+    Break-In-Match-Only: true
+    # 0 means every configured reward is opened; there is no hard-coded cap.
+    Rewards-Per-Break: 3
+    Sound: ENTITY_PLAYER_LEVELUP
+    Broadcast: "<yellow><bold>LuckyBlock</bold> <gray>» <white>%player% ha abierto <green>%amount% recompensas"
+    Rewards:
+      - "WEIGHT=12|ITEM:MATERIAL=DIAMOND;AMOUNT=2;NAME=<aqua>Diamantes afortunados"
+      - "WEIGHT=10|ITEM:MATERIAL=IRON_INGOT;AMOUNT=8;NAME=<gray>Hierro afortunado"
+      - "WEIGHT=8|ITEM:MATERIAL=GOLDEN_APPLE;AMOUNT=1;NAME=<gold>Manzana dorada"
+      - "WEIGHT=8|ITEM:MATERIAL=ENDER_PEARL;AMOUNT=2;NAME=<light_purple>Perlas de ender"
+      - "WEIGHT=7|ITEM:MATERIAL=OBSIDIAN;AMOUNT=8;NAME=<dark_purple>Obsidiana"
+      - "WEIGHT=6|ITEM:MATERIAL=ITEMSADDER:luckyblocks:coin;AMOUNT=1;NAME=<yellow>Moneda lucky"
+      - "WEIGHT=5|EFFECT:SPEED;DURATION=240;AMPLIFIER=2"
+      - "WEIGHT=5|EFFECT:LUCK;DURATION=300;AMPLIFIER=2"
+      - "WEIGHT=4|EFFECT:REGENERATION;DURATION=120;AMPLIFIER=1"
+      - "WEIGHT=3|COMMAND:give %player% firework_rocket 16"
+      - "WEIGHT=2|EXPLOSION:2.0"
+      - "WEIGHT=1|COMMAND:give %player% netherite_scrap 1"
+  PlaceholderAPI-In-Tab: false
+  Disable-Player-Reset: false
+  Disable-Language-Selection: false
+  Disable-Lobby-Items: false
+  Disable-Lobby-Void-Teleport: false
+  Disable-Map-Starting-Countdown:
+    Message: false
+    Actionbar: false
+  Item-Slots:
+    Lobby:
+      Profile: 0
+      Maps: 4
+      Shop: 8
+    Cage:
+      Kit: 1
+      Vote: 4
+      Leave: 7
+    Spectator:
+      Spectate: 1
+      Play-Again: 2
+      Shop: 4
+      Leave: 7
+    Setup:
+      Cage: 1
+      Chest1: 3
+      Chest2: 4
+      Settings: 6
+      Save: 7
+  # New: customize the MysticosSkywars items.
+  Items:
+    # Lobby items
+    Profile:
+      MATERIAL: PLAYER_HEAD
+      AMOUNT: 1
+      NAME: "&b&lProfile"
+      LORE:
+        - "&7Open your player profile."
+        - "&8Dummy example with lore."
+      CUSTOM_MODEL_DATA: 1001
+      ITEM_FLAGS: HIDE_ATTRIBUTES
+    Maps:
+      MATERIAL: NETHER_STAR
+      AMOUNT: 1
+      NAME: "&e&lMaps Browser"
+      LORE:
+        - "&7Browse available arenas."
+        - "&8Example item using custom model data."
+      CUSTOM_MODEL_DATA: 1002
+    Shop:
+      MATERIAL: EMERALD
+      AMOUNT: 1
+      NAME: "&a&lShop"
+      LORE:
+        - "&7Open the cosmetics shop."
+        - "&7This example uses a stack size."
+      CUSTOM_MODEL_DATA: 1003
+
+    # Cage / pre-game items
+    Kit:
+      MATERIAL: BOW
+      AMOUNT: 1
+      NAME: "&6&lKit Selector"
+      LORE:
+        - "&7Choose your kit before the match starts."
+        - "&8Example placeholder item."
+      CUSTOM_MODEL_DATA: 2001
+      ITEM_FLAGS: HIDE_ATTRIBUTES
+    Vote:
+      MATERIAL: HOPPER
+      AMOUNT: 1
+      NAME: "&d&lVote"
+      LORE:
+        - "&7Vote for chest mode, time, or modifiers."
+        - "&8Example with simple lore."
+      CUSTOM_MODEL_DATA: 2002
+    Cage:
+      MATERIAL: BEACON
+      AMOUNT: 1
+      NAME: "&b&lCage Selector"
+      LORE:
+        - "&7Choose your cage style."
+        - "&8You can swap this for any block/item."
+      CUSTOM_MODEL_DATA: 2003
+    Leave:
+      MATERIAL: BARRIER
+      AMOUNT: 1
+      NAME: "&c&lLeave"
+      LORE:
+        - "&7Leave the current session."
+        - "&8Shared example item."
+      CUSTOM_MODEL_DATA: 2004
+
+    # Spectator items
+    Spectate:
+      MATERIAL: COMPASS
+      AMOUNT: 1
+      NAME: "&f&lSpectate"
+      LORE:
+        - "&7Teleport to players still alive."
+        - "&8Useful spectator navigation item."
+      CUSTOM_MODEL_DATA: 3001
+    Play-Again:
+      MATERIAL: TOTEM_OF_UNDYING
+      AMOUNT: 1
+      NAME: "&a&lPlay Again"
+      LORE:
+        - "&7Queue for another game."
+        - "&8Example using a flashy material."
+      CUSTOM_MODEL_DATA: 3002
+
+    # Setup / admin items
+    Chest1:
+      MATERIAL: CHEST
+      AMOUNT: 1
+      NAME: "&e&lSet Chest Tier 1"
+      LORE:
+        - "&7Assign the first chest loot table."
+        - "&8Admin setup example."
+      CUSTOM_MODEL_DATA: 4001
+    Chest2:
+      MATERIAL: TRAPPED_CHEST
+      AMOUNT: 1
+      NAME: "&6&lSet Chest Tier 2"
+      LORE:
+        - "&7Assign the second chest loot table."
+        - "&8Another setup example."
+      CUSTOM_MODEL_DATA: 4002
+    Settings:
+      MATERIAL: COMPARATOR
+      AMOUNT: 1
+      NAME: "&9&lSettings"
+      LORE:
+        - "&7Open map or match settings."
+        - "&8Example config item."
+      CUSTOM_MODEL_DATA: 4003
+    Save:
+      MATERIAL: NETHER_STAR
+      AMOUNT: 1
+      NAME: "&a&lSave"
+      LORE:
+        - "&7Save the current setup."
+        - "&8Example admin confirmation item."
+      CUSTOM_MODEL_DATA: 4004
+      ENCHANTMENTS: unbreaking:1
+      ITEM_FLAGS: HIDE_ENCHANTS
+  # Time in seconds
+  Time:
+    Formatting: dd-MM-yyyy HH:mm:ss
+    Offset: 0
+  Time-To-Start: 10
+  Min-Players-ToStart: 2
+  Time-EndGame: 10
+  Refresh-Leaderboards: 600
+  Vote-Before-Seconds: 3
+  Death-Match-Shrink-Factor: 2
+  Maximum-Game-Time:
+    Solo: 300
+    Teams: 500
+  Shuffle-Items-In-Chest: true
+  Kits:
+    Ender-Pearl-Perk-Give-Interval: 120
+  Default-Refill-Time: 180
+  # Events: REFILL, TNTRAIN
+  # REFILL refills the chests.
+  # TNTRAIN, when executed, summons a TNT above all game players.
+  # Event Config: <event>@<time of execution in seconds>
+  Events:
+    Solo:
+      - REFILL@60
+      - REFILL@120
+    Teams:
+      - REFILL@120
+      - REFILL@260
+  Coins:
+    Per-Win: 10
+    Per-Kill: 5
+    Per-Death: -5
+  Allowed-Commands:
+    - sw
+    - msw
+    - mysticosskywars
+  Random-Nicknames:
+    - Dimitrios
+    - Nikos
+    - Andreas
+    - Panagiotis
+    - Georgios
+    - Ioannis
+    - Alexandros
+    - Konstantinos
+    - Spyros
+    - Antonios
+    - Eleni
+    - Sophia
+    - Maria
+    - Katerina
+    - Despina
+    - Anastasia
+    - Jose
+    - Ioanna
+    - Evangelia
+    - Elektra

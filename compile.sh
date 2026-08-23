@@ -2,7 +2,7 @@
 set -euo pipefail
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODULE_DIR="$PROJECT_DIR/realskywars-plugin"
+MODULE_DIR="$PROJECT_DIR/mysticosskywars-plugin"
 TARGET_DIR="/Users/jose/Desktop/Files/dev/plugins"
 
 if ! command -v mvn >/dev/null 2>&1; then
@@ -14,19 +14,19 @@ cd "$PROJECT_DIR"
 
 VERSION="$(mvn -f "$MODULE_DIR/pom.xml" help:evaluate -Dexpression=project.version -q -DforceStdout | tail -n 1)"
 if [[ -z "$VERSION" ]]; then
-  echo "Error: Could not read plugin version from realskywars-plugin/pom.xml"
+  echo "Error: Could not read plugin version from mysticosskywars-plugin/pom.xml"
   exit 1
 fi
 
-JAR_NAME="RealSkywarsPlugin-${VERSION}.jar"
-OUTPUT_JAR_NAME="RealSkywars-${VERSION}.jar"
+JAR_NAME="MysticosSkywarsPlugin-${VERSION}.jar"
+OUTPUT_JAR_NAME="MysticosSkywars-${VERSION}.jar"
 
-echo "Building RealSkywarsPlugin..."
-mvn -pl realskywars-plugin -am clean package
+echo "Building MysticosSkywarsPlugin..."
+mvn -pl mysticosskywars-plugin -am clean package
 
 SOURCE_JAR="$MODULE_DIR/target/$JAR_NAME"
 if [[ ! -f "$SOURCE_JAR" ]]; then
-  SOURCE_JAR="$(ls -t "$MODULE_DIR"/target/RealSkywarsPlugin-*.jar 2>/dev/null | grep -v '/original-' | head -n 1 || true)"
+  SOURCE_JAR="$(ls -t "$MODULE_DIR"/target/MysticosSkywarsPlugin-*.jar 2>/dev/null | grep -v '/original-' | head -n 1 || true)"
   if [[ -z "$SOURCE_JAR" || ! -f "$SOURCE_JAR" ]]; then
     echo "Error: Built jar not found in $MODULE_DIR/target"
     exit 1

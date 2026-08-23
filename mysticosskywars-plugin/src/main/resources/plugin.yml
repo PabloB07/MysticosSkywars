@@ -1,0 +1,9 @@
+name: MysticosSkywars
+version: '${project.version}'
+main: joserodpt.mysticosskywars.plugin.MysticosSkywarsPlugin
+api-version: '1.14'
+depend: [WorldEdit]
+softdepend: [My_Worlds, Multiverse-Core, HolographicDisplays, PlaceholderAPI, DecentHolograms, RealRegions, RealPermissions, ItemsAdder, LuckyBlock, LuckPerms]
+authors: [JoseGamer_PT]
+description: Responsive and Efficient GUI Based Skywars Minigame Plugin
+load: POSTWORLD

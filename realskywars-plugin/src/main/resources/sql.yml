@@ -1,6 +1,0 @@
-driver: "SQLITE"
-host: "localhost"
-database: "RealSkywars"
-username: ""
-password: ""
-port: 3306

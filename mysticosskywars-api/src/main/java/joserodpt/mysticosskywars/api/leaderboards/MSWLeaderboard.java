@@ -1,0 +1,95 @@
+package joserodpt.mysticosskywars.api.leaderboards;
+
+/*
+ *   _____            _  _____ _
+ *  |  __ \          | |/ ____| |
+ *  | |__) |___  __ _| | (___ | | ___   ___      ____ _ _ __ ___
+ *  |  _  // _ \/ _` | |\___ \| |/ / | | \ \ /\ / / _` | '__/ __|
+ *  | | \ \  __/ (_| | |____) |   <| |_| |\ V  V / (_| | |  \__ \
+ *  |_|  \_\___|\__,_|_|_____/|_|\_\\__, | \_/\_/ \__,_|_|  |___/
+ *                                   __/ |
+ *                                  |___/
+ *
+ * Licensed under the MIT License
+ * @author José Rodrigues © 2019-2025
+ * @link https://github.com/joserodpt/MysticosSkywars
+ */
+
+import joserodpt.mysticosskywars.api.database.PlayerDataRow;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+public class MSWLeaderboard {
+
+    private final List<MSWLeaderboardRow> lbr = new ArrayList<>();
+
+    public MSWLeaderboard() {
+    }
+
+    public void addRow(UUID uuid, String name, int o) {
+        this.lbr.add(new MSWLeaderboardRow(uuid, name, o));
+    }
+
+    public String getIndex(int i) {
+        if (i <= this.lbr.size()) {
+            MSWLeaderboardRow lbr = this.lbr.get(i - 1);
+            lbr.setPlace(i);
+            return lbr.getText();
+        } else {
+            return new MSWLeaderboardRow().setPlace(i).getText();
+        }
+    }
+
+    public enum MSWLeaderboardCategories {
+        SOLO_WINS, SOLO_RANKED_WINS, TEAMS_WINS, TEAMS_RANKED_WINS,
+        KILLS, DEATHS, KILLS_RANKED, DEATHS_RANKED;
+
+        public String getDBName() {
+            switch (this) {
+                case SOLO_WINS:
+                    return "stats_wins_solo";
+                case KILLS:
+                    return "kills";
+                case DEATHS:
+                    return "deaths";
+                case KILLS_RANKED:
+                    return "ranked_kills";
+                case TEAMS_WINS:
+                    return "stats_wins_teams";
+                case TEAMS_RANKED_WINS:
+                    return "stats_wins_ranked_teams";
+                case DEATHS_RANKED:
+                    return "ranked_deaths";
+                case SOLO_RANKED_WINS:
+                    return "stats_wins_ranked_solo";
+                default:
+                    return "err";
+            }
+        }
+
+        public int getValue(PlayerDataRow p) {
+            switch (this) {
+                case SOLO_WINS:
+                    return p.getStats_wins_solo();
+                case KILLS:
+                    return p.getKills();
+                case DEATHS:
+                    return p.getDeaths();
+                case KILLS_RANKED:
+                    return p.getRanked_kills();
+                case TEAMS_WINS:
+                    return p.getStats_wins_teams();
+                case TEAMS_RANKED_WINS:
+                    return p.getStats_wins_ranked_teams();
+                case DEATHS_RANKED:
+                    return p.getRanked_deaths();
+                case SOLO_RANKED_WINS:
+                    return p.getStats_wins_ranked_solo();
+                default:
+                    return -1;
+            }
+        }
+    }
+}

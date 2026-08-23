@@ -31,12 +31,12 @@ jobs:
       - name: Upload plugin artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RealSkywars-plugin-${{ env.SAFE_REF_NAME }}
-          path: realskywars-plugin/target/RealSkywarsPlugin-*.jar
+          name: MysticosSkywars-plugin-${{ env.SAFE_REF_NAME }}
+          path: mysticosskywars-plugin/target/MysticosSkywarsPlugin-*.jar
           if-no-files-found: error
 
       - name: Publish API to GitHub Packages
         if: github.ref == 'refs/heads/master'
-        run: mvn --batch-mode deploy -pl realskywars-api -am
+        run: mvn --batch-mode deploy -pl mysticosskywars-api -am
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

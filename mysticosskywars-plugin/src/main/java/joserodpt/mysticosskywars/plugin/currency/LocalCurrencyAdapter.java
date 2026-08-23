@@ -1,0 +1,62 @@
+package joserodpt.mysticosskywars.plugin.currency;
+
+/*
+ *   _____            _  _____ _
+ *  |  __ \          | |/ ____| |
+ *  | |__) |___  __ _| | (___ | | ___   ___      ____ _ _ __ ___
+ *  |  _  // _ \/ _` | |\___ \| |/ / | | \ \ /\ / / _` | '__/ __|
+ *  | | \ \  __/ (_| | |____) |   <| |_| |\ V  V / (_| | |  \__ \
+ *  |_|  \_\___|\__,_|_|_____/|_|\_\\__, | \_/\_/ \__,_|_|  |___/
+ *                                   __/ |
+ *                                  |___/
+ *
+ * Licensed under the MIT License
+ * @author José Rodrigues © 2019-2025
+ * @link https://github.com/joserodpt/MysticosSkywars
+ */
+
+
+import joserodpt.mysticosskywars.api.currency.CurrencyAdapterAPI;
+import joserodpt.mysticosskywars.api.player.MSWPlayer;
+import joserodpt.mysticosskywars.api.utils.Text;
+
+public class LocalCurrencyAdapter implements CurrencyAdapterAPI {
+    @Override
+    public void transferCoins(MSWPlayer toPlayer, MSWPlayer fromPlayer, double amount) {
+        removeCoins(fromPlayer, amount);
+        addCoins(toPlayer, amount);
+    }
+
+    @Override
+    public void addCoins(MSWPlayer p, double amount) {
+        p.setLocalCoins(getCoins(p) + amount);
+        p.saveData(MSWPlayer.PlayerData.COINS);
+    }
+
+    @Override
+    public boolean removeCoins(MSWPlayer p, double amount) {
+        if (getCoins(p) >= amount) {
+            setCoins(p, getCoins(p) - amount);
+            //p.sendMessage(TranslatableLine.REMOVED_COINS.get(p, true).replace("%coins%", "" + amount));
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void setCoins(MSWPlayer p, double amount) {
+        p.setLocalCoins(amount);
+        p.saveData(MSWPlayer.PlayerData.COINS);
+    }
+
+    @Override
+    public double getCoins(MSWPlayer p) {
+        return p.getLocalCoins();
+    }
+
+    @Override
+    public String getCoinsFormatted(MSWPlayer p) {
+        return Text.formatDouble(this.getCoins(p));
+    }
+}

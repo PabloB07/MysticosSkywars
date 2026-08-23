@@ -1,0 +1,4 @@
+name: MysticosSkywarsAPI
+version: '${project.version}'
+main: joserodpt.mysticosskywars.api.MysticosSkywarsAPI
+api-version: '1.14'
