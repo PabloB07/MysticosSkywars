@@ -54,9 +54,10 @@ public class Text {
             return "";
         }
         try {
+            String normalized = legacyToMiniMessage(string.replace('Â§', '&'));
             Component component;
-            if (string.indexOf('<') >= 0 && string.indexOf('>') >= 0) {
-                component = MiniMessage.miniMessage().deserialize(string);
+            if (normalized.indexOf('<') >= 0 && normalized.indexOf('>') >= 0) {
+                component = MiniMessage.miniMessage().deserialize(normalized);
             } else {
                 component = LegacyComponentSerializer.legacyAmpersand().deserialize(string.replace('§', '&'));
             }
@@ -65,6 +66,24 @@ public class Text {
             // Keep malformed user configuration from disabling the plugin.
             return ForestColorAPI.colorize(string);
         }
+    }
+
+    private static String legacyToMiniMessage(String value) {
+        String result = value;
+        String[] colors = {
+                "#000000", "#0000AA", "#00AA00", "#00AAAA", "#AA0000", "#AA00AA",
+                "#FFAA00", "#AAAAAA", "#555555", "#5555FF", "#55FF55", "#55FFFF",
+                "#FF5555", "#FF55FF", "#FFFF55", "#FFFFFF"
+        };
+        for (int i = 0; i < colors.length; i++) {
+            result = result.replace("&" + Integer.toHexString(i), "<" + colors[i] + ">");
+        }
+        return result.replace("&k", "<obfuscated>")
+                .replace("&l", "<bold>")
+                .replace("&m", "<strikethrough>")
+                .replace("&n", "<underlined>")
+                .replace("&o", "<italic>")
+                .replace("&r", "<reset>");
     }
 
     public static String strip(String s) {

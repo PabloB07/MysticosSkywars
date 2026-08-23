@@ -24,6 +24,7 @@ import joserodpt.mysticosskywars.api.map.MSWMap;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 
+import java.io.File;
 import java.util.Objects;
 
 public class SWWorldDefaultEngine implements SWWorldEngine {
@@ -52,6 +53,23 @@ public class SWWorldDefaultEngine implements SWWorldEngine {
         if (Objects.requireNonNull(rr) == MSWMap.OperationReason.SHUTDOWN) {//delete world
             this.deleteWorld(MSWMap.OperationReason.SHUTDOWN);
         } else {
+            File mapsFolder = new File(MysticosSkywarsAPI.getInstance().getPlugin().getDataFolder(), "maps");
+            File template = new File(mapsFolder, this.getName());
+            File currentWorld = new File(MysticosSkywarsAPI.getInstance().getPlugin().getServer().getWorldContainer(), this.getName());
+
+            // A map cannot be reset safely without a template. Recover older maps
+            // by creating the missing template before unloading the live world.
+            if (!template.isDirectory() && currentWorld.isDirectory()) {
+                this.wm.copyWorld(this.getName(), WorldManagerAPI.CopyTo.MSW_FOLDER);
+            }
+
+            if (!template.isDirectory()) {
+                MysticosSkywarsAPI.getInstance().getLogger().severe(
+                        "Cannot reset map " + this.getName() + ": template not found at " + template);
+                this.gameRoom.setState(MSWMap.MapState.AVAILABLE);
+                return;
+            }
+
             this.deleteWorld(MSWMap.OperationReason.RESET);
             //Copy world
             this.wm.copyWorld(this.getName(), WorldManagerAPI.CopyTo.ROOT);

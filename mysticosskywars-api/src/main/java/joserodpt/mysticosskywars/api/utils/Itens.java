@@ -15,8 +15,10 @@ package joserodpt.mysticosskywars.api.utils;
  * @link https://github.com/joserodpt/MysticosSkywars
  */
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import joserodpt.mysticosskywars.api.MysticosSkywarsAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -25,11 +27,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Itens {
+
+    private static final Map<UUID, String> MOJANG_TEXTURE_CACHE = new ConcurrentHashMap<>();
+    private static final String MOJANG_PROFILE_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
     /** Resolves an ItemsAdder item without a hard dependency on its API. */
     public static ItemStack itemsAdder(String id, int amount) {
@@ -53,9 +65,89 @@ public class Itens {
         SkullMeta skull = (SkullMeta) item.getItemMeta();
         skull.setDisplayName(Text.color(name));
         skull.setLore(Text.color(lore));
-        skull.setOwningPlayer(Bukkit.getServer().getPlayer(player.getName()));
+        skull.setOwningPlayer(player);
         item.setItemMeta(skull);
+
+        applyPlayerTexture(item, player);
         return item;
+    }
+
+    /** Applies the player's Mojang texture asynchronously without blocking the server thread. */
+    public static void applyPlayerTexture(ItemStack item, Player player) {
+        if (item == null || player == null || !(item.getItemMeta() instanceof SkullMeta)) return;
+
+        UUID uuid = player.getUniqueId();
+        String texture = MOJANG_TEXTURE_CACHE.get(uuid);
+        if (texture != null) {
+            applyTexture(item, texture);
+        } else {
+            Bukkit.getScheduler().runTaskAsynchronously(MysticosSkywarsAPI.getInstance().getPlugin(), () -> {
+                String fetched = fetchMojangTexture(uuid);
+                if (fetched == null) return;
+                MOJANG_TEXTURE_CACHE.put(uuid, fetched);
+                Bukkit.getScheduler().runTask(MysticosSkywarsAPI.getInstance().getPlugin(), () -> applyTexture(item, fetched));
+            });
+        }
+    }
+
+    private static String fetchMojangTexture(UUID uuid) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(MOJANG_PROFILE_URL + uuid.toString().replace("-", "") + "?unsigned=false");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(3000);
+            connection.setReadTimeout(3000);
+            connection.setRequestMethod("GET");
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) return null;
+
+            String json = new String(connection.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+            JsonObject profile = JsonParser.parseString(json).getAsJsonObject();
+            for (com.google.gson.JsonElement property : profile.getAsJsonArray("properties")) {
+                JsonObject value = property.getAsJsonObject();
+                if ("textures".equals(value.get("name").getAsString())) {
+                    return value.get("value").getAsString();
+                }
+            }
+        } catch (Exception ignored) {
+            // Bukkit's player profile remains the fallback if Mojang is unavailable.
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+        return null;
+    }
+
+    private static void applyTexture(ItemStack item, String encodedTexture) {
+        try {
+            SkullMeta skull = (SkullMeta) item.getItemMeta();
+            Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+            Class<?> propertyClass = Class.forName("com.mojang.authlib.properties.Property");
+            Object profile = gameProfileClass.getConstructor(UUID.class, String.class)
+                    .newInstance(UUID.randomUUID(), null);
+            Object property = propertyClass.getConstructor(String.class, String.class)
+                    .newInstance("textures", encodedTexture);
+            Object properties = gameProfileClass.getMethod("getProperties").invoke(profile);
+            properties.getClass().getMethod("put", Object.class, Object.class)
+                    .invoke(properties, "textures", property);
+
+            Field profileField = findField(skull.getClass(), "profile");
+            profileField.setAccessible(true);
+            profileField.set(skull, profile);
+            item.setItemMeta(skull);
+        } catch (Exception ignored) {
+            // Paper/Bukkit profile handling remains the fallback on API changes.
+        }
+    }
+
+    private static Field findField(Class<?> type, String name) throws NoSuchFieldException {
+        Class<?> current = type;
+        while (current != null) {
+            try {
+                return current.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+                current = current.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(name);
     }
 
     public static ItemStack addLore(ItemStack i, List<String> lor) {
@@ -86,7 +178,7 @@ public class Itens {
 
     public static ItemStack renameItem(ItemStack item, String name, List<String> lore) {
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        meta.setDisplayName(Text.color(name));
         meta.setLore(Text.color(lore));
         meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
         item.setItemMeta(meta);
@@ -97,7 +189,7 @@ public class Itens {
         ItemStack item = new ItemStack(material, quantidade);
         ItemMeta meta = item.getItemMeta();
         if (nome != null) {
-            meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nome));
+            meta.setDisplayName(Text.color(nome));
         }
         item.setItemMeta(meta);
         return item;
@@ -106,7 +198,7 @@ public class Itens {
     public static ItemStack createItem(Material material, int quantidade, String nome, List<String> desc) {
         ItemStack item = new ItemStack(material, quantidade);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', nome));
+        meta.setDisplayName(Text.color(nome));
         meta.setLore(Text.color(desc));
         item.setItemMeta(meta);
         return item;
@@ -115,7 +207,7 @@ public class Itens {
     public static ItemStack createItemLoreEnchanted(Material m, int i, String name, List<String> desc) {
         ItemStack item = new ItemStack(m, i);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        meta.setDisplayName(Text.color(name));
         meta.setLore(Text.color(desc));
         meta.addEnchant(Enchantment.LUCK, 1, true);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
