@@ -116,6 +116,13 @@ public class MSWLanguage {
     }
 
     public void downloadLanguageFile() throws Exception {
+        // Proxies/custom server forks can expose versions such as
+        // "26.2.build.112", which are not valid mcasset.cloud paths.
+        if (!version.matches("\\d+\\.\\d+(\\.\\d+)?")) {
+            Debugger.print(MSWLanguage.class, "Skipping Minecraft language download for unsupported server version " + version);
+            return;
+        }
+
         MysticosSkywarsAPI.getInstance().getLogger().info("Downloading minecraft language file for " + getKey() + " (" + version + ") ...");
 
         String fileName = getKey() + ".json";
@@ -140,7 +147,9 @@ public class MSWLanguage {
                     Files.copy(inputStream, translationFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 }
             } else {
-                MysticosSkywarsAPI.getInstance().getLogger().severe("Failed to download language file for " + getKey() + "(" + version + ") -> Response: " + connection.getResponseMessage());
+                Debugger.print(MSWLanguage.class, "Minecraft language file unavailable for " + getKey() + " (HTTP " + connection.getResponseCode() + ")");
+                connection.disconnect();
+                return;
             }
 
             // Disconnect the connection
@@ -185,6 +194,8 @@ public class MSWLanguage {
             return MysticosSkywarsAPI.getInstance().getNMS().getItemName(mat);
         }
 
+        if (json == null) return MysticosSkywarsAPI.getInstance().getNMS().getItemName(mat);
+
         String name = mat.getKey().getKey();
         if (name.contains("wall_")) name = name.replace("wall_", "");
 
@@ -199,6 +210,8 @@ public class MSWLanguage {
             return Text.beautifyEnumName(ench.getKey().getKey());
         }
 
+        if (json == null) return Text.beautifyEnumName(ench.getKey().getKey());
+
         return getLocalizedString("enchantment.minecraft." + ench.getKey().getKey());
     }
 
@@ -209,6 +222,8 @@ public class MSWLanguage {
             Debugger.print(MSWLanguage.class, "Could not load language " + this.getKey() + " - " + this.getDisplayName() + " -> Exception: " + e.getMessage());
             return Text.beautifyEnumName(type.name());
         }
+
+        if (json == null) return Text.beautifyEnumName(type.name());
 
         String name = type.name();
         if (name == null) return getLocalizedString("entity.notFound");
@@ -223,7 +238,7 @@ public class MSWLanguage {
             return key;
         }
 
-        if (json == null) return "Language file " + getKey() + " not loaded!";
+        if (json == null) return key;
         return json.get(key).getAsString();
     }
 

@@ -202,11 +202,6 @@ public class MysticosSkywars extends MysticosSkywarsAPI {
     }
 
     @Override
-    public boolean hasNewUpdate() {
-        return this.plugin.hasNewUpdate();
-    }
-
-    @Override
     public void reload() {
         mapManagerAPI.endMaps(false);
 

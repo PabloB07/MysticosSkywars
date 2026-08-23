@@ -4,7 +4,7 @@
   <groupId>joserodpt</groupId>
   <artifactId>MysticosSkywarsAPI</artifactId>
   <name>MysticosSkywarsAPI</name>
-  <version>1.2.1</version>
+  <version>1.0.0</version>
   <build>
     <resources>
       <resource>

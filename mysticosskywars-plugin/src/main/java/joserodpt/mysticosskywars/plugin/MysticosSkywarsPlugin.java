@@ -95,12 +95,9 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
 
     private MysticosSkywars mysticosSkywars;
 
-    private boolean newUpdate;
     private final PluginManager pm = Bukkit.getPluginManager();
 
     public void onEnable() {
-        printASCII();
-
         final long start = System.currentTimeMillis();
         pl = this;
         mysticosSkywars = new MysticosSkywars(this);
@@ -282,15 +279,6 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
         //refresh leaderboards
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, mysticosSkywars.getLeaderboardManagerAPI()::refreshLeaderboards, MSWConfig.file().getInt("Config.Refresh-Leaderboards"), MSWConfig.file().getInt("Config.Refresh-Leaderboards"));
 
-        new UpdateChecker(this, 105115).getVersion(version -> {
-            if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                this.getLogger().info("The plugin is updated to the latest version.");
-            } else {
-                this.newUpdate = true;
-                this.getLogger().warning("There is a new update available! Version: " + version + " https://www.spigotmc.org/resources/105115/");
-            }
-        });
-
         if (getServer().getPluginManager().getPlugin("RealPermissions") != null) {
             //register RealMines permissions onto RealPermissions
             try {
@@ -323,17 +311,6 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
 
         getLogger().info("Finished loading in " + ((System.currentTimeMillis() - start) / 1000F) + " seconds.");
         getLogger().info("<------------- MysticosSkywars vPT ------------->".replace("PT", this.getDescription().getVersion()));
-    }
-
-    private void printASCII() {
-        logWithColor("&b   _____            _  _____ _ ");
-        logWithColor("&b  |  __ \\          | |/ ____| |");
-        logWithColor("&b  | |__) |___  __ _| | (___ | | ___   ___      ____ _ _ __ ___");
-        logWithColor("&b  |  _  // _ \\/ _` | |\\___ \\| |/ / | | \\ \\ /\\ / / _` | '__/ __|");
-        logWithColor("&b  | | \\ \\  __/ (_| | |____) |   <| |_| |\\ V  V / (_| | |  \\__ \\");
-        logWithColor("&b  |_|  \\_\\___|\\__,_|_|_____/|_|\\_\\\\__, | \\_/\\_/ \\__,_|_|  |___/");
-        logWithColor("&b   &8Made by: &9JoseGamer_PT           &b__/ |      &8Version: &9" + this.getDescription().getVersion());
-        logWithColor("&b                                  |___/");
     }
 
     private void registerCommand(String realmines, BaseCommandWA mineCMD, Map<String, BaseCommandWA> commands, BukkitCommandManager<CommandSender> commandManager) {
@@ -408,7 +385,4 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
         return vaultEconomy != null;
     }
 
-    public boolean hasNewUpdate() {
-        return this.newUpdate;
-    }
 }

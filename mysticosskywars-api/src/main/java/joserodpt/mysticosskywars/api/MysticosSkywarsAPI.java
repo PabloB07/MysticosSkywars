@@ -103,8 +103,6 @@ public abstract class MysticosSkywarsAPI {
 
     public abstract String getSimpleServerVersion();
 
-    public abstract boolean hasNewUpdate();
-
     public abstract void reload();
 
     public abstract Economy getVaultEconomy();
