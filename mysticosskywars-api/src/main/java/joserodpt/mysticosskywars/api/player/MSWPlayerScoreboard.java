@@ -15,7 +15,6 @@ package joserodpt.mysticosskywars.api.player;
  * @link https://github.com/joserodpt/MysticosSkywars
  */
 
-import fr.mrmicky.fastboard.FastBoard;
 import joserodpt.mysticosskywars.api.MysticosSkywarsAPI;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
 import joserodpt.mysticosskywars.api.config.TranslatableLine;
@@ -23,6 +22,7 @@ import joserodpt.mysticosskywars.api.config.TranslatableList;
 import joserodpt.mysticosskywars.api.managers.MapManagerAPI;
 import joserodpt.mysticosskywars.api.map.MSWMap;
 import joserodpt.mysticosskywars.api.utils.Text;
+import fr.mrmicky.fastboard.FastBoard;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -33,9 +33,10 @@ import java.util.stream.Collectors;
 
 public class MSWPlayerScoreboard {
 
-    private FastBoard fb = null;
+    private FastBoard fb;
     private final MSWPlayer p;
     private BukkitTask task;
+    private boolean disabled;
 
     public MSWPlayerScoreboard(MSWPlayer r) {
         this.p = r;
@@ -44,8 +45,10 @@ public class MSWPlayerScoreboard {
             if (MysticosSkywarsAPI.getInstance().getLobbyManagerAPI().getLobbyLocation() != null) {
                 this.run();
             }
-        } catch (Exception e) {
-            Bukkit.getLogger().warning("Could not create scoreboard for player " + r.getName() + " - " + e.getMessage());
+        } catch (final RuntimeException exception) {
+            this.disabled = true;
+            Bukkit.getLogger().warning("Could not create FastBoard for player " + r.getName()
+                    + ": " + exception.getMessage());
         }
     }
 
@@ -73,7 +76,7 @@ public class MSWPlayerScoreboard {
         if (this.task != null) {
             this.task.cancel();
         }
-        if (!this.fb.isDeleted()) {
+        if (this.fb != null && !this.fb.isDeleted()) {
             this.fb.delete();
         }
     }
@@ -87,8 +90,8 @@ public class MSWPlayerScoreboard {
                     switch (p.getState()) {
                         case LOBBY_OR_NOGAME:
                             if (!MysticosSkywarsAPI.getInstance().getLobbyManagerAPI().scoreboardInLobby() || !MysticosSkywarsAPI.getInstance().getLobbyManagerAPI().isInLobby(p.getWorld())) {
-                                if (!fb.isDeleted()) {
-                                    fb.delete();
+                                if (MSWPlayerScoreboard.this.fb != null && !MSWPlayerScoreboard.this.fb.isDeleted()) {
+                                    MSWPlayerScoreboard.this.fb.delete();
                                 }
                                 return;
                             }
@@ -122,11 +125,30 @@ public class MSWPlayerScoreboard {
     }
 
     private void displayScoreboard(String title, List<String> elements) {
-        if (this.fb.isDeleted()) {
-            this.fb = new FastBoard(p.getPlayer());
+        if (this.disabled) {
+            return;
         }
 
-        this.fb.updateTitle(title);
-        this.fb.updateLines(elements);
+        try {
+            if (this.fb == null || this.fb.isDeleted()) {
+                this.fb = new FastBoard(p.getPlayer());
+            }
+            this.fb.updateTitle(title);
+            this.fb.updateLines(elements);
+        } catch (final RuntimeException exception) {
+            this.disabled = true;
+            if (this.task != null) {
+                this.task.cancel();
+            }
+            try {
+                if (this.fb != null && !this.fb.isDeleted()) {
+                    this.fb.delete();
+                }
+            } catch (final RuntimeException ignored) {
+                // FastBoard can fail while cleaning up on an incompatible server.
+            }
+            Bukkit.getLogger().warning("FastBoard disabled for " + p.getName()
+                    + " because it could not update the scoreboard: " + exception.getMessage());
+        }
     }
 }

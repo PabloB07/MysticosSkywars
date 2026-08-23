@@ -24,6 +24,7 @@ import joserodpt.mysticosskywars.api.effects.MSWBowTrail;
 import joserodpt.mysticosskywars.api.managers.MapManagerAPI;
 import joserodpt.mysticosskywars.api.map.MSWMap;
 import joserodpt.mysticosskywars.api.player.MSWPlayer;
+import joserodpt.mysticosskywars.api.player.MSWPlayerItems;
 import joserodpt.mysticosskywars.api.shop.MSWBuyableItem;
 import joserodpt.mysticosskywars.api.utils.Text;
 import joserodpt.mysticosskywars.plugin.gui.GUIManager;
@@ -62,6 +63,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Optional;
 
@@ -179,6 +181,16 @@ public class PlayerListener implements Listener {
                         }
                     }
                     if (p.isInMatch()) {
+                        ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
+                        if ((p.getState() == MSWPlayer.PlayerState.CAGE
+                                || p.getState() == MSWPlayer.PlayerState.SPECTATOR
+                                || p.getState() == MSWPlayer.PlayerState.EXTERNAL_SPECTATOR)
+                                && MSWPlayerItems.ITEM_LEAVE.matches(p, hand)) {
+                            e.setCancelled(true);
+                            p.getMatch().removePlayer(p);
+                            return;
+                        }
+
                         switch (p.getState()) {
                             case PLAYING:
                                 //fill chests

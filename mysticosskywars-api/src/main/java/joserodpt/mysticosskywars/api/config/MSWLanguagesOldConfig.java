@@ -47,6 +47,10 @@ public class MSWLanguagesOldConfig {
     }
 
     public static void save() {
+        if (document == null) {
+            return;
+        }
+
         try {
             document.save();
         } catch (final IOException e) {
@@ -55,6 +59,10 @@ public class MSWLanguagesOldConfig {
     }
 
     public static void reload() {
+        if (document == null) {
+            return;
+        }
+
         try {
             document.reload();
         } catch (final IOException e) {

@@ -117,6 +117,10 @@ public class TeamsMode extends MSWMap {
 
     @Override
     public void addPlayer(MSWPlayer p) {
+        if (p.getMatch() == this) {
+            return;
+        }
+
         if (this.isUnregistered()) {
             TranslatableLine.MAP_IS_UNREGISTERED.send(p, true);
             return;

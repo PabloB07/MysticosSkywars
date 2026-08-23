@@ -78,7 +78,7 @@ public class WorldManager extends WorldManagerAPI {
         File target = new File(maps, name);
         switch (t) {
             case ROOT:
-                this.copyWorld(name, target, source);
+                this.copyWorld(name, new File(maps, name), new File(root, name));
                 break;
             case MSW_FOLDER:
                 this.copyWorld(name, source, target);
@@ -149,17 +149,26 @@ public class WorldManager extends WorldManagerAPI {
             List<String> ignore = Lists.newArrayList("uid.dat", "session.dat", "session.lock");
             if (!ignore.contains(source.getName())) {
                 if (source.isDirectory()) {
-                    if ((!target.exists()) && (target.mkdirs())) {
-                        String[] files = source.list();
-                        if (files != null) {
-                            for (String file : files) {
-                                File srcFile = new File(source, file);
-                                File destFile = new File(target, file);
-                                copyWorld(name, srcFile, destFile);
-                            }
+                    if (!source.exists()) {
+                        throw new FileNotFoundException(source.toString());
+                    }
+                    if (!target.exists() && !target.mkdirs()) {
+                        throw new IOException("Unable to create directory: " + target);
+                    }
+
+                    String[] files = source.list();
+                    if (files != null) {
+                        for (String file : files) {
+                            File srcFile = new File(source, file);
+                            File destFile = new File(target, file);
+                            copyWorld(name, srcFile, destFile);
                         }
                     }
                 } else {
+                    if (target.getParentFile() != null && !target.getParentFile().exists()
+                            && !target.getParentFile().mkdirs()) {
+                        throw new IOException("Unable to create directory: " + target.getParentFile());
+                    }
                     copyFile(source, target);
                 }
             }
@@ -267,7 +276,7 @@ public class WorldManager extends WorldManagerAPI {
     private void copyFile(File source, File targe) throws IOException {
         java.io.InputStream in = new java.io.FileInputStream(source);
         OutputStream out = new java.io.FileOutputStream(targe);
-        byte[] buffer = new byte['Ѐ'];
+        byte[] buffer = new byte[8192];
         int length;
         while ((length = in.read(buffer)) > 0) out.write(buffer, 0, length);
         in.close();

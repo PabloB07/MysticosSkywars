@@ -37,6 +37,10 @@ public enum MSWPlayerItems {
         p.getInventory().setItem(slot, i);
     }
 
+    public boolean matches(MSWPlayer p, ItemStack item) {
+        return item != null && item.getType() != Material.AIR && item.isSimilar(this.get(p));
+    }
+
     public void giveSet(MSWPlayer p) {
         if (p.isBot() || p.getPlayer() == null) {
             return;
