@@ -136,6 +136,15 @@ zh_cn:
         TNTRain:
           - "&c&lTNT 雨"
           - "&c小心TNT!"
+        LuckyBlock-Spawn:
+          - "&e&l幸运方块！"
+          - "&6幸运方块出现在你周围！"
+        LuckyBlock-Rain:
+          - "&a&l幸运方块雨！"
+          - "&a幸运方块从天而降！"
+        LuckyBlock-Treasure:
+          - "&d&l幸运宝藏！"
+          - "&d每个人都获得一个幸运方块！"
       Title:
         Win: "&b%player% &a胜利了!"
         DeathMatch: "&c世界正在缩小！"
@@ -203,6 +212,10 @@ zh_cn:
       Name: "&e设置"
     Save:
       Name: "&a保存"
+    Holograms:
+      Name: "&d全息图 &7(右键)"
+    Map-Editor:
+      Name: "&b地图编辑器 &7(右键)"
     Statistics:
       Name: "&f%player% &f的数据统计"
       Lore:

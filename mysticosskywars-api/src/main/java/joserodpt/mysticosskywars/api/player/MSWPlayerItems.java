@@ -131,6 +131,13 @@ public enum MSWPlayerItems {
                 return getConfiguredItem("Kit", Material.BOW, 1, TranslatableLine.ITEM_KIT_NAME.get(p));
             case ITEM_PROFILE:
                 ItemStack profile = getConfiguredItem("Profile", Material.PLAYER_HEAD, 1, TranslatableLine.ITEM_PROFILE_NAME.get(p));
+                // A custom model can replace the skull renderer with a block from a resource pack.
+                // The profile item must always use the player's real skin, even with an old config.
+                if (profile.hasItemMeta()) {
+                    org.bukkit.inventory.meta.ItemMeta meta = profile.getItemMeta();
+                    meta.setCustomModelData(null);
+                    profile.setItemMeta(meta);
+                }
                 Itens.applyPlayerTexture(profile, p.getPlayer());
                 return profile;
             case ITEM_SETCAGE:

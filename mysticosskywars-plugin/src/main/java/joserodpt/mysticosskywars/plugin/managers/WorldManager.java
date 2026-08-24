@@ -73,12 +73,12 @@ public class WorldManager extends WorldManagerAPI {
     @Override
     public void copyWorld(String name, CopyTo t) {
         File maps = new File(rs.getPlugin().getDataFolder(), "maps");
-        String root = rs.getPlugin().getServer().getWorldContainer().getAbsolutePath();
-        File source = new File(root, name);
+        World world = rs.getPlugin().getServer().getWorld(name);
+        File source = world != null ? world.getWorldFolder() : new File(rs.getPlugin().getServer().getWorldContainer(), name);
         File target = new File(maps, name);
         switch (t) {
             case ROOT:
-                this.copyWorld(name, new File(maps, name), new File(root, name));
+                this.copyWorld(name, new File(maps, name), source);
                 break;
             case MSW_FOLDER:
                 this.copyWorld(name, source, target);
@@ -146,12 +146,12 @@ public class WorldManager extends WorldManagerAPI {
     @Override
     public void copyWorld(String name, File source, File target) {
         try {
+            if (!source.exists()) {
+                throw new FileNotFoundException(source.toString());
+            }
             List<String> ignore = Lists.newArrayList("uid.dat", "session.dat", "session.lock");
             if (!ignore.contains(source.getName())) {
                 if (source.isDirectory()) {
-                    if (!source.exists()) {
-                        throw new FileNotFoundException(source.toString());
-                    }
                     if (!target.exists() && !target.mkdirs()) {
                         throw new IOException("Unable to create directory: " + target);
                     }
@@ -173,10 +173,10 @@ public class WorldManager extends WorldManagerAPI {
                 }
             }
         } catch (FileNotFoundException e) {
-            MysticosSkywarsAPI.getInstance().getLogger().severe("Failed to copy world: + " + name + " not found");
+            MysticosSkywarsAPI.getInstance().getLogger().severe("Failed to copy world: " + name + " not found");
             MysticosSkywarsAPI.getInstance().getLogger().severe(e.getMessage());
         } catch (IOException e) {
-            MysticosSkywarsAPI.getInstance().getLogger().severe("Failed to copy world: + " + name);
+            MysticosSkywarsAPI.getInstance().getLogger().severe("Failed to copy world: " + name);
             MysticosSkywarsAPI.getInstance().getLogger().severe(e.getMessage());
         }
     }

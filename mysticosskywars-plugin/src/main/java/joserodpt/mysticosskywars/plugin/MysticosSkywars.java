@@ -19,6 +19,7 @@ import joserodpt.mysticosskywars.api.Debugger;
 import joserodpt.mysticosskywars.api.MSWEventsAPI;
 import joserodpt.mysticosskywars.api.MysticosSkywarsAPI;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
+import joserodpt.mysticosskywars.api.config.MSWHologramConfig;
 import joserodpt.mysticosskywars.api.config.MSWKitsConfig;
 import joserodpt.mysticosskywars.api.config.MSWLanguagesOldConfig;
 import joserodpt.mysticosskywars.api.config.MSWMapsConfig;
@@ -46,6 +47,7 @@ import joserodpt.mysticosskywars.plugin.managers.HologramManager;
 import joserodpt.mysticosskywars.plugin.managers.KitManager;
 import joserodpt.mysticosskywars.plugin.managers.LanguageManager;
 import joserodpt.mysticosskywars.plugin.managers.LeaderboardManager;
+import joserodpt.mysticosskywars.plugin.managers.LobbyHologramManager;
 import joserodpt.mysticosskywars.plugin.managers.LobbyManager;
 import joserodpt.mysticosskywars.plugin.managers.MapManager;
 import joserodpt.mysticosskywars.plugin.managers.PartiesManager;
@@ -78,6 +80,7 @@ public class MysticosSkywars extends MysticosSkywarsAPI {
     public final MSWEventsAPI mswEventsAPI = new MSWEventsAPI();
     private DatabaseManagerAPI databaseManagerAPI;
     private final HologramManagerAPI hologramManagerAPI;
+    private LobbyHologramManager lobbyHologramManager;
     private CurrencyAdapterAPI currencyAdapterAPI;
 
     public MysticosSkywars(MysticosSkywarsPlugin plugin) {
@@ -94,6 +97,7 @@ public class MysticosSkywars extends MysticosSkywarsAPI {
         leaderboardManagerAPI = new LeaderboardManager(this);
         achievementsManagerAPI = new AchievementsManager(this);
         hologramManagerAPI = new HologramManager(this);
+        lobbyHologramManager = new LobbyHologramManager(hologramManagerAPI, plugin);
     }
 
     @Override
@@ -186,6 +190,10 @@ public class MysticosSkywars extends MysticosSkywarsAPI {
         return this.currencyAdapterAPI;
     }
 
+    public LobbyHologramManager getLobbyHologramManager() {
+        return this.lobbyHologramManager;
+    }
+
     @Override
     public JavaPlugin getPlugin() {
         return this.plugin;
@@ -208,6 +216,7 @@ public class MysticosSkywars extends MysticosSkywarsAPI {
         MSWConfig.reload();
         MSWMapsConfig.reload();
         MSWLanguagesOldConfig.reload();
+        MSWHologramConfig.reload();
 
         Debugger.debug = MSWConfig.file().getBoolean("Debug-Mode");
 

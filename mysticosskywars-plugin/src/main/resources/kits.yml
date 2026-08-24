@@ -1,6 +1,6 @@
 Kits:
   Default:
-    Display-Name: Default
+    Display-Name: "<gradient:#94a3b8:#e2e8f0>Supervivencia</gradient>"
     Price: 0.0
     Icon: LEATHER_CHESTPLATE
     Permission: MysticosSkywars.Kit
@@ -18,7 +18,7 @@ Kits:
         SLOT: 3
         MATERIAL: WOODEN_AXE
   Ecologist:
-    Display-Name: Ecologist
+    Display-Name: "<gradient:#4ade80:#16a34a>Ecologista</gradient>"
     Price: 10.0
     Icon: OAK_SAPLING
     Permission: MysticosSkywars.Kit
@@ -36,7 +36,7 @@ Kits:
         SLOT: 3
         MATERIAL: BONE_MEAL
   Life:
-    Display-Name: '&aLife'
+    Display-Name: '<gradient:#f43f5e:#fb7185>Vida</gradient>'
     Price: 10.0
     Icon: TOTEM_OF_UNDYING
     Permission: MysticosSkywars.Kit
@@ -45,7 +45,7 @@ Kits:
         SLOT: 0
         MATERIAL: TOTEM_OF_UNDYING
   Enderman:
-    Display-Name: '&5Enderman'
+    Display-Name: '<gradient:#a78bfa:#6d28d9>Enderman</gradient>'
     Price: 10.0
     Icon: ENDER_EYE
     Permission: MysticosSkywars.Kit
@@ -71,7 +71,7 @@ Kits:
         SLOT: 39
         MATERIAL: DRAGON_HEAD
   Warrior:
-    Display-Name: '&9Warrior'
+    Display-Name: '<gradient:#38bdf8:#2563eb>Guerrero</gradient>'
     Price: 10.0
     Icon: IRON_SWORD
     Permission: MysticosSkywars.Kit
@@ -101,7 +101,7 @@ Kits:
         SLOT: 40
         MATERIAL: ARROW
   DJ:
-    Display-Name: '&eDJ'
+    Display-Name: '<gradient:#facc15:#f97316>DJ</gradient>'
     Price: 20.0
     Icon: JUKEBOX
     Permission: MysticosSkywars.Kit

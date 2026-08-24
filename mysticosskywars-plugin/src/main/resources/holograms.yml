@@ -1,0 +1,42 @@
+Version: 1
+Config:
+  # Enable lobby holograms (requires HolographicDisplays or DecentHolograms)
+  Enabled: true
+  # How often to refresh hologram data (in ticks, 20 = 1 second)
+  Refresh-Interval: 600
+  # Number of players to show on leaderboards
+  Leaderboard-Size: 10
+  # Hologram lines prefix
+  Prefix: "&7» "
+  # Lines configuration for each hologram type
+  Lines:
+    Last-Winner:
+      - "&6&lLast Winner"
+      - "&f%winner%"
+      - "&7on &b%map%"
+      - "&7%time%"
+    Top-Wins-Solo:
+      - "&b&lTop Wins (Solo)"
+      - "&f#1 &7- &b%player1% &7- &f%wins1%"
+      - "&f#2 &7- &b%player2% &7- &f%wins2%"
+      - "&f#3 &7- &b%player3% &7- &f%wins3%"
+    Top-Wins-Teams:
+      - "&a&lTop Wins (Teams)"
+      - "&f#1 &7- &a%player1% &7- &f%wins1%"
+      - "&f#2 &7- &a%player2% &7- &f%wins2%"
+      - "&f#3 &7- &a%player3% &7- &f%wins3%"
+    Top-Kills:
+      - "&c&lTop Kills"
+      - "&f#1 &7- &c%player1% &7- &f%kills1%"
+      - "&f#2 &7- &c%player2% &7- &f%kills2%"
+      - "&f#3 &7- &c%player3% &7- &f%kills3%"
+    Top-Coins:
+      - "&e&lTop Coins"
+      - "&f#1 &7- &e%player1% &7- &f%coins1%"
+      - "&f#2 &7- &e%player2% &7- &f%coins2%"
+      - "&f#3 &7- &e%player3% &7- &f%coins3%"
+    Server-Info:
+      - "&9&lMysticosSkywars"
+      - "&fPlayers: &b%online%"
+      - "&fGames: &b%games%"
+      - "&fMaps: &b%maps%"

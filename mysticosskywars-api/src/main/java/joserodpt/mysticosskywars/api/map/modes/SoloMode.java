@@ -22,6 +22,7 @@ import joserodpt.mysticosskywars.api.chests.MSWChest;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
 import joserodpt.mysticosskywars.api.config.TranslatableLine;
 import joserodpt.mysticosskywars.api.config.TranslatableList;
+import joserodpt.mysticosskywars.api.events.MSWPlayerWinEvent;
 import joserodpt.mysticosskywars.api.managers.world.MSWWorld;
 import joserodpt.mysticosskywars.api.map.MSWMap;
 import joserodpt.mysticosskywars.api.map.modes.teams.MSWTeam;
@@ -213,6 +214,9 @@ public class SoloMode extends MSWMap {
             super.getTimeCounterTask().cancel();
 
             super.getMysticosSkywarsAPI().getPlayerManagerAPI().getPlayers().forEach(gamePlayer -> gamePlayer.sendMessage(TranslatableLine.WINNER_BROADCAST.get(gamePlayer, true).replace("%winner%", p.getDisplayName()).replace("%map%", super.getName()).replace("%displayname%", super.getDisplayName())));
+
+            // Fire win event
+            org.bukkit.Bukkit.getPluginManager().callEvent(new MSWPlayerWinEvent(p, this));
 
             if (this.isInstantEndEnabled()) {
                 this.sendLog(p, true);

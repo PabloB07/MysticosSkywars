@@ -140,6 +140,15 @@ pt_pt:
         TNTRain:
           - "&c&lCHUVA DE TNT"
           - "&cCuidado com a TNT!"
+        LuckyBlock-Spawn:
+          - "&e&lBLOCO DA SORTE!"
+          - "&6Blocos da sorte apareceram ao teu redor!"
+        LuckyBlock-Rain:
+          - "&a&lCHUVA DE BLOCOS DA SORTE!"
+          - "&aBlocos da sorte estão a cair do céu!"
+        LuckyBlock-Treasure:
+          - "&d&lTESOURO DA SORTE!"
+          - "&dTodos recebem um Bloco da Sorte!"
       Title:
         Win: "&b%player% &avenceu!"
         DeathMatch: "&cO mundo está encolhendo..."
@@ -236,6 +245,10 @@ pt_pt:
       Name: "&eDefinições"
     Save:
       Name: "&aSalvar"
+    Holograms:
+      Name: "&dHologramas &7(Clique Direito)"
+    Map-Editor:
+      Name: "&bEditor de Mapa &7(Clique Direito)"
     Statistics:
       Name: "&fEstatísticas de %player%"
       Lore:

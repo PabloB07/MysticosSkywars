@@ -18,14 +18,25 @@ package joserodpt.mysticosskywars.api.map;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
 import joserodpt.mysticosskywars.api.config.TranslatableLine;
 import joserodpt.mysticosskywars.api.config.TranslatableList;
+import joserodpt.mysticosskywars.api.player.MSWPlayer;
 import joserodpt.mysticosskywars.api.utils.Itens;
+import joserodpt.mysticosskywars.api.utils.ItemStackSpringer;
 import joserodpt.mysticosskywars.api.utils.Text;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.inventory.ItemStack;
 
+import joserodpt.mysticosskywars.api.MysticosSkywarsAPI;
+
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MSWMapEvent {
 
@@ -88,6 +99,102 @@ public class MSWMapEvent {
                 this.room.getBorder().setSize((double) this.room.getBorderSize() / factor, 30L);
                 this.room.getBorder().setCenter(this.room.getMapCuboid().getCenter());
                 break;
+            case LUCKYBLOCK_SPAWN:
+                executeLuckyBlockSpawn();
+                break;
+            case LUCKYBLOCK_RAIN:
+                executeLuckyBlockRain();
+                break;
+            case LUCKYBLOCK_TREASURE:
+                executeLuckyBlockTreasure();
+                break;
+        }
+    }
+
+    private void executeLuckyBlockSpawn() {
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.sendTitle(TranslatableList.LUCKYBLOCK_SPAWN_EVENT_TITLE.get(mswPlayer).get(0), TranslatableList.LUCKYBLOCK_SPAWN_EVENT_TITLE.get(mswPlayer).get(1), 4, 10, 4));
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.playSound(Sound.BLOCK_NOTE_BLOCK_PLING, 50, 50));
+
+        List<String> blockNames = MSWConfig.file().getStringList("Config.LuckyBlock.Blocks");
+        Material luckyMat = Material.SPONGE;
+        if (!blockNames.isEmpty()) {
+            try {
+                luckyMat = Material.valueOf(blockNames.get(0).trim().toUpperCase());
+            } catch (IllegalArgumentException ignored) {}
+        }
+
+        int count = MSWConfig.file().getInt("Config.LuckyBlock.Events.Spawn-Amount", 5);
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+
+        for (int i = 0; i < count; i++) {
+            for (MSWPlayer p : this.room.getPlayers()) {
+                if (p.getPlayer() == null) continue;
+                Location center = p.getPlayer().getLocation();
+                int ox = rand.nextInt(-8, 9);
+                int oz = rand.nextInt(-8, 9);
+                Location target = center.clone().add(ox, 0, oz);
+                target.setY(this.room.getMSWWorld().getWorld().getHighestBlockYAt(target) + 1);
+
+                if (target.getBlock().getType() == Material.AIR || target.getBlock().getType() == Material.CAVE_AIR) {
+                    target.getBlock().setType(luckyMat);
+                }
+            }
+        }
+    }
+
+    private void executeLuckyBlockRain() {
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.sendTitle(TranslatableList.LUCKYBLOCK_RAIN_EVENT_TITLE.get(mswPlayer).get(0), TranslatableList.LUCKYBLOCK_RAIN_EVENT_TITLE.get(mswPlayer).get(1), 4, 10, 4));
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.playSound(Sound.ENTITY_ENDER_DRAGON_FLAP, 50, 50));
+
+        List<String> blockNames = MSWConfig.file().getStringList("Config.LuckyBlock.Blocks");
+        Material luckyMat = Material.SPONGE;
+        if (!blockNames.isEmpty()) {
+            try {
+                luckyMat = Material.valueOf(blockNames.get(0).trim().toUpperCase());
+            } catch (IllegalArgumentException ignored) {}
+        }
+
+        int count = MSWConfig.file().getInt("Config.LuckyBlock.Events.Rain-Amount", 15);
+        ThreadLocalRandom rand = ThreadLocalRandom.current();
+
+        for (int i = 0; i < count; i++) {
+            for (MSWPlayer p : this.room.getPlayers()) {
+                if (p.getPlayer() == null) continue;
+                Location center = p.getPlayer().getLocation();
+                int ox = rand.nextInt(-6, 7);
+                int oz = rand.nextInt(-6, 7);
+                int oy = rand.nextInt(8, 20);
+                Location target = center.clone().add(ox, oy, oz);
+
+                Block below = target.clone().subtract(0, 1, 0).getBlock();
+                if (below.getType() != Material.AIR && below.getType() != Material.CAVE_AIR) {
+                    target.getBlock().setType(luckyMat);
+                    this.room.getMSWWorld().getWorld().spawnParticle(Particle.CLOUD, target.clone().add(0.5, 0.5, 0.5), 5, 0.2, 0.2, 0.2, 0.01);
+                }
+            }
+        }
+    }
+
+    private void executeLuckyBlockTreasure() {
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.sendTitle(TranslatableList.LUCKYBLOCK_TREASURE_EVENT_TITLE.get(mswPlayer).get(0), TranslatableList.LUCKYBLOCK_TREASURE_EVENT_TITLE.get(mswPlayer).get(1), 4, 10, 4));
+        this.room.getAllPlayers().forEach(mswPlayer -> mswPlayer.playSound(Sound.ENTITY_PLAYER_LEVELUP, 50, 50));
+
+        List<String> blockNames = MSWConfig.file().getStringList("Config.LuckyBlock.Blocks");
+        String luckyBlockId = blockNames.isEmpty() ? "SPONGE" : blockNames.get(0).trim();
+
+        for (MSWPlayer p : this.room.getPlayers()) {
+            if (p.getPlayer() == null) continue;
+            Map<String, Object> data = new HashMap<>();
+            data.put("MATERIAL", luckyBlockId.startsWith("ITEMSADDER:") ? luckyBlockId : luckyBlockId.toUpperCase());
+            data.put("AMOUNT", 1);
+            data.put("NAME", "&e&lLucky Block");
+            try {
+                ItemStack item = ItemStackSpringer.getItemDeSerialized(data);
+                if (item != null) {
+                    p.getPlayer().getInventory().addItem(item);
+                    p.getPlayer().getWorld().spawnParticle(Particle.TOTEM, p.getPlayer().getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+                }
+            } catch (IllegalArgumentException ignored) {}
         }
     }
 
@@ -104,7 +211,8 @@ public class MSWMapEvent {
     }
 
     public enum EventType {
-        REFILL(Material.CHEST), TNTRAIN(Material.TNT), BORDERSHRINK(Material.SPAWNER);
+        REFILL(Material.CHEST), TNTRAIN(Material.TNT), BORDERSHRINK(Material.SPAWNER),
+        LUCKYBLOCK_SPAWN(Material.SPONGE), LUCKYBLOCK_RAIN(Material.SLIME_BLOCK), LUCKYBLOCK_TREASURE(Material.ENDER_CHEST);
 
         final Material icon;
 

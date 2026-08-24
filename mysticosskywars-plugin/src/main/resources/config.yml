@@ -47,6 +47,11 @@ Config:
   Invincibility-Seconds: 3
   Auto-Teleport-To-Lobby: true
   Scoreboard-In-Lobby: true
+  Scoreboard:
+    Enabled: true
+    Update-Interval: 20
+    Max-Lines: 15
+    # Localized title and lines are read from the language file.
   Enable-Tab-Formatting: true
   Enable-Chat-Per-Map: false
   Disable-Chest-Animation: false
@@ -82,6 +87,11 @@ Config:
     Rewards-Per-Break: 3
     Sound: ENTITY_PLAYER_LEVELUP
     Broadcast: "<yellow><bold>LuckyBlock</bold> <gray>» <white>%player% ha abierto <green>%amount% recompensas"
+    Events:
+      # Amount of lucky blocks to spawn per player during LUCKYBLOCK_SPAWN event
+      Spawn-Amount: 5
+      # Amount of lucky blocks to rain from sky per player during LUCKYBLOCK_RAIN event
+      Rain-Amount: 15
     Rewards:
       - "WEIGHT=12|ITEM:MATERIAL=DIAMOND;AMOUNT=2;NAME=<aqua>Diamantes afortunados"
       - "WEIGHT=10|ITEM:MATERIAL=IRON_INGOT;AMOUNT=8;NAME=<gray>Hierro afortunado"
@@ -129,114 +139,113 @@ Config:
     Profile:
       MATERIAL: PLAYER_HEAD
       AMOUNT: 1
-      NAME: "&b&lProfile"
+      NAME: "<gradient:#38bdf8:#a78bfa><bold>Perfil</bold></gradient> <gray>(Clic derecho)"
       LORE:
-        - "&7Open your player profile."
-        - "&8Dummy example with lore."
-      CUSTOM_MODEL_DATA: 1001
+        - "<gray>Consulta tus estadisticas y cosmeticos."
+        - "<dark_gray>Abre el menu de perfil."
       ITEM_FLAGS: HIDE_ATTRIBUTES
     Maps:
       MATERIAL: NETHER_STAR
       AMOUNT: 1
-      NAME: "&e&lMaps Browser"
+      NAME: "<gradient:#facc15:#fb923c><bold>Mapas</bold></gradient> <gray>(Clic derecho)"
       LORE:
-        - "&7Browse available arenas."
-        - "&8Example item using custom model data."
+        - "<gray>Explora las arenas disponibles."
+        - "<dark_gray>Elige tu próxima partida."
       CUSTOM_MODEL_DATA: 1002
     Shop:
       MATERIAL: EMERALD
       AMOUNT: 1
-      NAME: "&a&lShop"
+      NAME: "<gradient:#34d399:#22d3ee><bold>Tienda</bold></gradient> <gray>(Clic derecho)"
       LORE:
-        - "&7Open the cosmetics shop."
-        - "&7This example uses a stack size."
+        - "<gray>Compra kits y cosméticos."
+        - "<dark_gray>Personaliza tu experiencia."
       CUSTOM_MODEL_DATA: 1003
 
     # Cage / pre-game items
     Kit:
       MATERIAL: BOW
       AMOUNT: 1
-      NAME: "&6&lKit Selector"
+      NAME: "<gradient:#fb923c:#facc15><bold>Selector de kits</bold></gradient>"
       LORE:
-        - "&7Choose your kit before the match starts."
-        - "&8Example placeholder item."
+        - "<gray>Elige tu equipamiento antes de comenzar."
+        - "<dark_gray>Haz clic para abrir los kits."
       CUSTOM_MODEL_DATA: 2001
       ITEM_FLAGS: HIDE_ATTRIBUTES
     Vote:
       MATERIAL: HOPPER
       AMOUNT: 1
-      NAME: "&d&lVote"
+      NAME: "<gradient:#e879f9:#818cf8><bold>Votación</bold></gradient>"
       LORE:
-        - "&7Vote for chest mode, time, or modifiers."
-        - "&8Example with simple lore."
+        - "<gray>Vota por cofres, tiempo y modificadores."
+        - "<dark_gray>Tu voto cambia la partida."
       CUSTOM_MODEL_DATA: 2002
     Cage:
       MATERIAL: BEACON
       AMOUNT: 1
-      NAME: "&b&lCage Selector"
+      NAME: "<gradient:#22d3ee:#60a5fa><bold>Jaula</bold></gradient>"
       LORE:
-        - "&7Choose your cage style."
-        - "&8You can swap this for any block/item."
+        - "<gray>Selecciona tu bloque de jaula."
+        - "<dark_gray>Personaliza tu aparición."
       CUSTOM_MODEL_DATA: 2003
     Leave:
       MATERIAL: BARRIER
       AMOUNT: 1
-      NAME: "&c&lLeave"
+      NAME: "<gradient:#fb7185:#ef4444><bold>Salir</bold></gradient>"
       LORE:
-        - "&7Leave the current session."
-        - "&8Shared example item."
+        - "<gray>Abandona la partida actual."
+        - "<dark_gray>Clic derecho para salir."
       CUSTOM_MODEL_DATA: 2004
 
     # Spectator items
     Spectate:
       MATERIAL: COMPASS
       AMOUNT: 1
-      NAME: "&f&lSpectate"
+      NAME: "<gradient:#f8fafc:#94a3b8><bold>Espectar</bold></gradient>"
       LORE:
-        - "&7Teleport to players still alive."
-        - "&8Useful spectator navigation item."
+        - "<gray>Observa a los jugadores restantes."
+        - "<dark_gray>Teletranspórtate con el menú."
       CUSTOM_MODEL_DATA: 3001
     Play-Again:
       MATERIAL: TOTEM_OF_UNDYING
       AMOUNT: 1
-      NAME: "&a&lPlay Again"
+      NAME: "<gradient:#4ade80:#22c55e><bold>Jugar de nuevo</bold></gradient>"
       LORE:
-        - "&7Queue for another game."
-        - "&8Example using a flashy material."
+        - "<gray>Vuelve a entrar rápidamente."
+        - "<dark_gray>Busca una nueva partida."
       CUSTOM_MODEL_DATA: 3002
 
     # Setup / admin items
     Chest1:
       MATERIAL: CHEST
       AMOUNT: 1
-      NAME: "&e&lSet Chest Tier 1"
+      NAME: "<gradient:#facc15:#fb923c><bold>Cofre comun</bold></gradient>"
       LORE:
-        - "&7Assign the first chest loot table."
-        - "&8Admin setup example."
+        - "<gray>Asigna la tabla de botin comun."
+        - "<dark_gray>Herramienta de administracion."
       CUSTOM_MODEL_DATA: 4001
     Chest2:
       MATERIAL: TRAPPED_CHEST
       AMOUNT: 1
-      NAME: "&6&lSet Chest Tier 2"
+      NAME: "<gradient:#fb923c:#ef4444><bold>Cofre especial</bold></gradient>"
       LORE:
-        - "&7Assign the second chest loot table."
-        - "&8Another setup example."
+        - "<gray>Asigna la tabla de botin especial."
+        - "<dark_gray>Herramienta de administracion."
       CUSTOM_MODEL_DATA: 4002
     Settings:
       MATERIAL: COMPARATOR
       AMOUNT: 1
-      NAME: "&9&lSettings"
+      NAME: "<gradient:#facc15:#f97316><bold>Configuración</bold></gradient>"
       LORE:
-        - "&7Open map or match settings."
-        - "&8Example config item."
+        - "<gray>Edita las opciones de la arena."
+        - "<dark_gray>Solo disponible para administradores."
       CUSTOM_MODEL_DATA: 4003
     Save:
       MATERIAL: NETHER_STAR
       AMOUNT: 1
-      NAME: "&a&lSave"
+      NAME: "<gradient:#4ade80:#06b6d4><bold>Guardar mapa</bold></gradient>"
       LORE:
-        - "&7Save the current setup."
-        - "&8Example admin confirmation item."
+        - "<gray>Guarda la configuración de la arena."
+        - "<dark_gray>Registra el mapa al terminar."
       CUSTOM_MODEL_DATA: 4004
       ENCHANTMENTS: unbreaking:1
       ITEM_FLAGS: HIDE_ENCHANTS

@@ -115,6 +115,8 @@ public enum TranslatableLine {
     ITEM_VOTE_NAME(".Itens.Vote.Name"),
     ITEM_SETTINGS_NAME(".Itens.Settings.Name"),
     ITEM_SAVE_NAME(".Itens.Save.Name"),
+    ITEM_HOLOGRAMS_NAME(".Itens.Holograms.Name"),
+    ITEM_MAP_EDITOR_NAME(".Itens.Map-Editor.Name"),
 
     MENU_PLAYER_RESET_ALERT(".Menus.Player-Profile.Reset-Data.Alert"),
     MENU_PLAYERP_VIEWITEM(".Menus.Player-Profile.View-Item"),

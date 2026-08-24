@@ -54,12 +54,12 @@ public class Text {
             return "";
         }
         try {
-            String normalized = legacyToMiniMessage(string.replace('Â§', '&'));
+            String normalized = legacyToMiniMessage(string);
             Component component;
             if (normalized.indexOf('<') >= 0 && normalized.indexOf('>') >= 0) {
                 component = MiniMessage.miniMessage().deserialize(normalized);
             } else {
-                component = LegacyComponentSerializer.legacyAmpersand().deserialize(string.replace('§', '&'));
+                component = LegacyComponentSerializer.legacyAmpersand().deserialize(string.replace("\u00A7", "&"));
             }
             return LegacyComponentSerializer.legacySection().serialize(component);
         } catch (RuntimeException ignored) {

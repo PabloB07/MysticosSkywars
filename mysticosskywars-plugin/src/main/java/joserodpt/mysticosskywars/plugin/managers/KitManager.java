@@ -57,7 +57,8 @@ public class KitManager extends KitManagerAPI {
                     Material mat;
                     MSWKit mswKit;
                     try {
-                        mat = Material.getMaterial(matString);
+                        mat = Material.matchMaterial(matString == null ? "BARRIER" : matString.toUpperCase());
+                        if (mat == null) throw new IllegalArgumentException("Unknown material");
                     } catch (Exception e) {
                         mat = Material.BARRIER;
                         MysticosSkywarsAPI.getInstance().getLogger().warning(matString + " isn't a valid material [KIT]");
@@ -65,7 +66,7 @@ public class KitManager extends KitManagerAPI {
 
                     List<Map<String, Object>> inv = (List<Map<String, Object>>) MSWKitsConfig.file().getList("Kits." + name + ".Contents");
 
-                    if (inv.isEmpty()) {
+                    if (inv == null || inv.isEmpty()) {
                         Debugger.printerr(KitManager.class, "Inventory Itens on " + "Kits." + name + ".Contents" + " are empty! Skipping kit.");
                         continue;
                     }
@@ -82,7 +83,7 @@ public class KitManager extends KitManagerAPI {
                     Debugger.print(KitManager.class, "Loaded " + mswKit);
                 } catch (Exception e) {
                     Bukkit.getLogger().warning("Error loading kit: " + name + "! Skipping kit.");
-                    Bukkit.getLogger().warning(e.getMessage());
+                    Bukkit.getLogger().warning(String.valueOf(e.getMessage()));
                 }
             }
         }

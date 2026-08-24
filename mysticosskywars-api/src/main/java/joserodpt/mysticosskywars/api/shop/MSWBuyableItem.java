@@ -26,7 +26,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -138,15 +140,24 @@ public class MSWBuyableItem {
         }
 
         if (this.getCategory() == ItemCategory.SPEC_SHOP) {
-            return Itens.createItemLoreEnchanted(this.getMaterial(), this.getAmount(), "&b" + this.getDisplayName() + " &fx" + this.getAmount(), Arrays.asList("&a&nF (Swap hand)&r&f to increase the item amount.", "&c&nQ (Drop)&r&f to decrease the item amount.", TranslatableLine.SHOP_CLICK_2_BUY.get(p).replace("%coins%", this.getPriceFormatted())));
+            return Itens.createItemLoreEnchanted(this.getMaterial(), this.getAmount(), "<gradient:#38bdf8:#a78bfa>" + this.getDisplayName() + "</gradient> <gray>x" + this.getAmount(), decorate(Arrays.asList("<green><underlined>F</underlined> <gray>cambia la cantidad.", "<red><underlined>Q</underlined> <gray>reduce la cantidad.", TranslatableLine.SHOP_CLICK_2_BUY.get(p).replace("%coins%", this.getPriceFormatted()))));
         }
 
         Pair<Boolean, String> res = this.isBought(p);
         if (res.getKey()) {
-            return Itens.createItemLoreEnchanted(this.getMaterial(), this.getAmount(), "&b" + this.getDisplayName(), Objects.equals(res.getValue(), "free") ? Collections.singletonList(TranslatableLine.SHOP_CLICK_2_SELECT.get(p)) : Arrays.asList("&f" + TranslatableLine.SHOP_BOUGHT_ON.get(p) + res.getValue(), TranslatableLine.SHOP_CLICK_2_SELECT.get(p)));
+            return Itens.createItemLoreEnchanted(this.getMaterial(), this.getAmount(), "<gradient:#38bdf8:#a78bfa>" + this.getDisplayName() + "</gradient>", decorate(Objects.equals(res.getValue(), "free") ? Collections.singletonList(TranslatableLine.SHOP_CLICK_2_SELECT.get(p)) : Arrays.asList("<gray>" + TranslatableLine.SHOP_BOUGHT_ON.get(p) + res.getValue(), TranslatableLine.SHOP_CLICK_2_SELECT.get(p))));
         } else {
-            return Itens.createItem(this.getMaterial(), 1, "&b" + this.getDisplayName(), Collections.singletonList(TranslatableLine.SHOP_CLICK_2_BUY.get(p).replace("%coins%", this.getPriceFormatted())));
+            return Itens.createItem(this.getMaterial(), 1, "<gradient:#38bdf8:#a78bfa>" + this.getDisplayName() + "</gradient>", decorate(Collections.singletonList(TranslatableLine.SHOP_CLICK_2_BUY.get(p).replace("%coins%", this.getPriceFormatted()))));
         }
+    }
+
+    private List<String> decorate(List<String> lines) {
+        List<String> result = new ArrayList<>();
+        result.add("<dark_gray>Cosmetico: <gray>" + this.getCategory().getCategoryConfigName());
+        result.add("<dark_gray>Precio: <#facc15>" + this.getPriceFormatted());
+        result.add("");
+        result.addAll(lines);
+        return result;
     }
 
     public void setDummy() {

@@ -152,6 +152,15 @@ pl_pl:
         TNTRain:
           - "&c&lDESZCZ TNT"
           - "&cUważaj na TNT!"
+        LuckyBlock-Spawn:
+          - "&e&lSZCZĘŚLIWE BLOKI!"
+          - "&6Szczęśliwe bloki pojawiły się wokół ciebie!"
+        LuckyBlock-Rain:
+          - "&a&lDESZCZ SZCZĘŚLIWYCH BLOKÓW!"
+          - "&aSzczęśliwe bloki spadają z nieba!"
+        LuckyBlock-Treasure:
+          - "&d&lSKARB SZCZĘŚCIA!"
+          - "&dKażdy otrzymuje Szczęśliwy Blok!"
       Title:
         Win: "&b%player% &awygrał!"
         DeathMatch: "&cŚwiat zaczyna się kurczyć..."
@@ -219,6 +228,10 @@ pl_pl:
       Name: "&eUstawienia"
     Save:
       Name: "&aZapisz"
+    Holograms:
+      Name: "&dHologramy &7(Prawy Klik)"
+    Map-Editor:
+      Name: "&bEdytor Map &7(Prawy Klik)"
     Statistics:
       Name: "&f%player% &fstatystyki"
       Lore:

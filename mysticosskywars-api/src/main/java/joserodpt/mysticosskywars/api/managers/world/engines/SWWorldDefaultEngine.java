@@ -54,28 +54,30 @@ public class SWWorldDefaultEngine implements SWWorldEngine {
             this.deleteWorld(MSWMap.OperationReason.SHUTDOWN);
         } else {
             File mapsFolder = new File(MysticosSkywarsAPI.getInstance().getPlugin().getDataFolder(), "maps");
-            File template = new File(mapsFolder, this.getName());
-            File currentWorld = new File(MysticosSkywarsAPI.getInstance().getPlugin().getServer().getWorldContainer(), this.getName());
+            File template = new File(mapsFolder, this.worldName);
+            File currentWorld = this.world != null
+                    ? this.world.getWorldFolder()
+                    : new File(MysticosSkywarsAPI.getInstance().getPlugin().getServer().getWorldContainer(), this.worldName);
 
             // A map cannot be reset safely without a template. Recover older maps
             // by creating the missing template before unloading the live world.
             if (!template.isDirectory() && currentWorld.isDirectory()) {
-                this.wm.copyWorld(this.getName(), WorldManagerAPI.CopyTo.MSW_FOLDER);
+                this.wm.copyWorld(this.worldName, WorldManagerAPI.CopyTo.MSW_FOLDER);
             }
 
             if (!template.isDirectory()) {
                 MysticosSkywarsAPI.getInstance().getLogger().severe(
-                        "Cannot reset map " + this.getName() + ": template not found at " + template);
+                        "Cannot reset map " + this.worldName + ": template not found at " + template);
                 this.gameRoom.setState(MSWMap.MapState.AVAILABLE);
                 return;
             }
 
             this.deleteWorld(MSWMap.OperationReason.RESET);
             //Copy world
-            this.wm.copyWorld(this.getName(), WorldManagerAPI.CopyTo.ROOT);
+            this.wm.copyWorld(this.worldName, WorldManagerAPI.CopyTo.ROOT);
 
             //Load world
-            this.world = this.wm.createEmptyWorld(this.getName(), World.Environment.NORMAL);
+            this.world = this.wm.createEmptyWorld(this.worldName, World.Environment.NORMAL);
             if (this.world != null) {
                 this.world.setTime(0);
                 this.world.setStorm(false);

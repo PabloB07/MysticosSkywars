@@ -55,6 +55,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -385,6 +386,13 @@ public class MapManager extends MapManagerAPI {
 
             //Copy world
             rs.getWorldManagerAPI().copyWorld(map.getMSWWorld().getName(), WorldManager.CopyTo.MSW_FOLDER);
+
+            File template = new File(rs.getPlugin().getDataFolder(), "maps/" + map.getMSWWorld().getName());
+            if (!template.isDirectory()) {
+                rs.getLogger().severe("Map template was not created: " + template);
+                TranslatableLine.MAP_UNREGISTER_TO_EDIT.send(p, true);
+                return;
+            }
         }
 
         map.getCages().forEach(mswCage -> mswCage.setMap(map));
@@ -445,7 +453,7 @@ public class MapManager extends MapManagerAPI {
 
     @Override
     protected Boolean isRanked(String s) {
-        return MSWMapsConfig.file().getBoolean(s + ".ranked");
+        return MSWMapsConfig.file().getBoolean(s + ".Settings.Ranked");
     }
 
     @Override

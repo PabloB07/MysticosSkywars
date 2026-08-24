@@ -21,6 +21,7 @@ import joserodpt.mysticosskywars.api.chests.MSWChest;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
 import joserodpt.mysticosskywars.api.config.TranslatableLine;
 import joserodpt.mysticosskywars.api.config.TranslatableList;
+import joserodpt.mysticosskywars.api.events.MSWPlayerWinEvent;
 import joserodpt.mysticosskywars.api.managers.world.MSWWorld;
 import joserodpt.mysticosskywars.api.map.MSWMap;
 import joserodpt.mysticosskywars.api.player.MSWPlayer;
@@ -232,6 +233,12 @@ public class TeamsMode extends MSWMap {
             super.getTimeCounterTask().cancel();
 
             super.getMysticosSkywarsAPI().getPlayerManagerAPI().getPlayers().forEach(gamePlayer -> gamePlayer.sendMessage(TranslatableLine.WINNER_BROADCAST.get(gamePlayer, true).replace("%winner%", winMSWTeam.getNames()).replace("%map%", super.getName()).replace("%displayname%", super.getDisplayName())));
+
+            // Fire win event for team leader
+            MSWPlayer teamLeader = winMSWTeam.getMembers().isEmpty() ? null : winMSWTeam.getMembers().get(0);
+            if (teamLeader != null) {
+                org.bukkit.Bukkit.getPluginManager().callEvent(new MSWPlayerWinEvent(teamLeader, this));
+            }
 
             if (this.isInstantEndEnabled()) {
                 winMSWTeam.getMembers().forEach(mswPlayer -> this.sendLog(mswPlayer, true));

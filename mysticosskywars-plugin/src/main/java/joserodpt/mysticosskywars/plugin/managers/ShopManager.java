@@ -59,6 +59,10 @@ public class ShopManager extends ShopManagerAPI {
 
         for (String category : MSWShopsConfig.file().getSection("Shops").getRoutesAsStrings(false)) {
             MSWBuyableItem.ItemCategory cat = MSWBuyableItem.ItemCategory.getCategoryByName(category);
+            if (cat == null) {
+                rs.getLogger().warning("Unknown shop category " + category + ". Skipping it.");
+                continue;
+            }
             for (String item : MSWShopsConfig.file().getSection("Shops." + category).getRoutesAsStrings(false)) {
                 //verify if item already exists
                 if (shopItems.containsKey(item)) {
@@ -68,6 +72,11 @@ public class ShopManager extends ShopManagerAPI {
 
                 String displayname = MSWShopsConfig.file().getString("Shops." + category + "." + item + ".Displayname");
                 String material = MSWShopsConfig.file().getString("Shops." + category + "." + item + ".Material");
+                Material parsedMaterial = Material.matchMaterial(material == null ? "BARRIER" : material.toUpperCase());
+                if (parsedMaterial == null) {
+                    rs.getLogger().warning("Invalid shop material " + material + " in " + category + "." + item + ". Skipping it.");
+                    continue;
+                }
                 double price = MSWShopsConfig.file().getDouble("Shops." + category + "." + item + ".Price");
                 String permission = MSWShopsConfig.file().getString("Shops." + category + "." + item + ".Permission");
                 Map<String, Object> extras = new HashMap<>();
@@ -80,9 +89,9 @@ public class ShopManager extends ShopManagerAPI {
                 MSWBuyableItem buyableItem;
                 if (cat == MSWBuyableItem.ItemCategory.BOW_PARTICLE) {
                     String particle = MSWShopsConfig.file().getString("Shops." + category + "." + item + ".Extras.Particle");
-                    buyableItem = new MSWParticleItem(item, displayname, Material.valueOf(material), price, permission, particle);
+                    buyableItem = new MSWParticleItem(item, displayname, parsedMaterial, price, permission, particle);
                 } else {
-                    buyableItem = new MSWBuyableItem(item, displayname, Material.valueOf(material), price, permission, cat, extras);
+                    buyableItem = new MSWBuyableItem(item, displayname, parsedMaterial, price, permission, cat, extras);
                 }
                 shopItems.put(item, buyableItem);
             }

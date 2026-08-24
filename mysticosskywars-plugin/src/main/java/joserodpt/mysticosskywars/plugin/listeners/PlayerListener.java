@@ -168,14 +168,15 @@ public class PlayerListener implements Listener {
             case RIGHT_CLICK_AIR:
                 if (p != null) {
                     if (p.getPlayer() != null && p.getPlayer().isOp()) {
-                        if (e.getPlayer().getInventory().getItemInMainHand() != null && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.COMPARATOR) {
+                        ItemStack hand = e.getPlayer().getInventory().getItemInMainHand();
+                        if (hand != null && hand.getType() == Material.COMPARATOR) {
                             MSWMap map = rs.getMapManagerAPI().getMap(p.getPlayer().getWorld());
                             if (map != null && map.isUnregistered()) {
                                 MapSettingsGUI m = new MapSettingsGUI(p, map);
                                 m.openInventory(p);
                                 return;
                             }
-                        } else if (e.getPlayer().getInventory().getItemInMainHand() != null && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.CHEST_MINECART) {
+                        } else if (hand != null && MSWPlayerItems.ITEM_SAVE.matches(p, hand)) {
                             p.getPlayer().performCommand("msw finish");
                             return;
                         }

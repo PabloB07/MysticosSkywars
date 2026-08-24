@@ -28,6 +28,30 @@ public class MSWParticleItem extends MSWBuyableItem {
     }
 
     public Particle getParticle() {
-        return Particle.valueOf((String) this.getExtrasMap().get("Particle"));
+        String configured = String.valueOf(this.getExtrasMap().get("Particle")).toUpperCase();
+        String normalized = configured;
+        String legacy = null;
+        switch (configured) {
+            case "EXPLOSION_NORMAL":
+            case "EXPLOSION_LARGE":
+            case "EXPLOSION_HUGE": normalized = "EXPLOSION"; legacy = configured; break;
+            case "FIREWORKS_SPARK": normalized = "FIREWORK"; legacy = configured; break;
+            case "WATER_BUBBLE": normalized = "BUBBLE_POP"; legacy = configured; break;
+            case "WATER_SPLASH": normalized = "SPLASH"; legacy = configured; break;
+            case "WATER_WAKE": normalized = "FISHING"; legacy = configured; break;
+            case "SMOKE_NORMAL": normalized = "SMOKE"; legacy = configured; break;
+            case "SMOKE_LARGE": normalized = "LARGE_SMOKE"; legacy = configured; break;
+            case "CRIT_MAGIC": normalized = "ENCHANTED_HIT"; legacy = configured; break;
+            default: break;
+        }
+        try {
+            return Particle.valueOf(normalized);
+        } catch (IllegalArgumentException exception) {
+            try {
+                return legacy == null ? Particle.CLOUD : Particle.valueOf(legacy);
+            } catch (IllegalArgumentException ignored) {
+                return Particle.CLOUD;
+            }
+        }
     }
 }

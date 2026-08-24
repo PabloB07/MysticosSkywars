@@ -31,6 +31,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,13 +81,29 @@ public class Itens {
         String texture = MOJANG_TEXTURE_CACHE.get(uuid);
         if (texture != null) {
             applyTexture(item, texture);
+            refreshPlayerHeads(player, item);
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(MysticosSkywarsAPI.getInstance().getPlugin(), () -> {
                 String fetched = fetchMojangTexture(uuid);
                 if (fetched == null) return;
                 MOJANG_TEXTURE_CACHE.put(uuid, fetched);
-                Bukkit.getScheduler().runTask(MysticosSkywarsAPI.getInstance().getPlugin(), () -> applyTexture(item, fetched));
+                Bukkit.getScheduler().runTask(MysticosSkywarsAPI.getInstance().getPlugin(), () -> {
+                    applyTexture(item, fetched);
+                    refreshPlayerHeads(player, item);
+                });
             });
+        }
+    }
+
+    private static void refreshPlayerHeads(Player player, ItemStack texturedItem) {
+        if (!player.isOnline() || !(texturedItem.getItemMeta() instanceof SkullMeta)) return;
+        String displayName = texturedItem.getItemMeta().getDisplayName();
+        for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
+            ItemStack current = player.getInventory().getItem(slot);
+            if (current == null || current.getType() != Material.PLAYER_HEAD || !current.hasItemMeta()) continue;
+            if (displayName.equals(current.getItemMeta().getDisplayName())) {
+                player.getInventory().setItem(slot, texturedItem.clone());
+            }
         }
     }
 
@@ -119,6 +136,14 @@ public class Itens {
     private static void applyTexture(ItemStack item, String encodedTexture) {
         try {
             SkullMeta skull = (SkullMeta) item.getItemMeta();
+            String skinUrl = textureUrl(encodedTexture);
+            if (skinUrl != null) {
+                org.bukkit.profile.PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+                profile.getTextures().setSkin(new URL(skinUrl));
+                skull.setOwnerProfile(profile);
+                item.setItemMeta(skull);
+                return;
+            }
             Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
             Class<?> propertyClass = Class.forName("com.mojang.authlib.properties.Property");
             Object profile = gameProfileClass.getConstructor(UUID.class, String.class)
@@ -135,6 +160,17 @@ public class Itens {
             item.setItemMeta(skull);
         } catch (Exception ignored) {
             // Paper/Bukkit profile handling remains the fallback on API changes.
+        }
+    }
+
+    private static String textureUrl(String encodedTexture) {
+        try {
+            String json = new String(Base64.getDecoder().decode(encodedTexture), StandardCharsets.UTF_8);
+            JsonObject textures = JsonParser.parseString(json).getAsJsonObject();
+            return textures.getAsJsonObject("textures").getAsJsonObject("SKIN")
+                    .get("url").getAsString();
+        } catch (Exception ignored) {
+            return null;
         }
     }
 

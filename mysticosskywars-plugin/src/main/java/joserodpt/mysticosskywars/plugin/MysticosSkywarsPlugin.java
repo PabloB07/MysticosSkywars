@@ -27,6 +27,7 @@ import joserodpt.mysticosskywars.api.chests.MSWChest;
 import joserodpt.mysticosskywars.api.chests.TierViewer;
 import joserodpt.mysticosskywars.api.config.MSWAchievementsConfig;
 import joserodpt.mysticosskywars.api.config.MSWConfig;
+import joserodpt.mysticosskywars.api.config.MSWHologramConfig;
 import joserodpt.mysticosskywars.api.config.MSWKitsConfig;
 import joserodpt.mysticosskywars.api.config.MSWLanguagesOldConfig;
 import joserodpt.mysticosskywars.api.config.MSWMapsConfig;
@@ -64,9 +65,12 @@ import joserodpt.mysticosskywars.plugin.gui.guis.PlayerItemsGUI;
 import joserodpt.mysticosskywars.plugin.gui.guis.SettingsGUI;
 import joserodpt.mysticosskywars.plugin.gui.guis.ShopGUI;
 import joserodpt.mysticosskywars.plugin.gui.guis.VoteGUI;
+import joserodpt.mysticosskywars.plugin.gui.guis.HologramGUI;
+import joserodpt.mysticosskywars.plugin.gui.guis.MapEditorGUI;
 import joserodpt.mysticosskywars.plugin.listeners.EventListener;
 import joserodpt.mysticosskywars.plugin.listeners.PlayerListener;
 import joserodpt.mysticosskywars.plugin.listeners.LuckyBlockListener;
+import joserodpt.mysticosskywars.plugin.listeners.HologramWinListener;
 import joserodpt.mysticosskywars.plugin.managers.DatabaseManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -135,6 +139,7 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
         MSWSQLConfig.setup(this);
         MSWShopsConfig.setup(this);
         MSWKitsConfig.setup(this);
+        MSWHologramConfig.setup(this);
 
         //chests
         BasicChestConfig.setup(this);
@@ -150,6 +155,7 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
         pm.registerEvents(new PlayerListener(mysticosSkywars), this);
         pm.registerEvents(new EventListener(mysticosSkywars), this);
         pm.registerEvents(new LuckyBlockListener(), this);
+        pm.registerEvents(new HologramWinListener(mysticosSkywars), this);
         pm.registerEvents(PlayerInput.getListener(), this);
         pm.registerEvents(GUIBuilder.getListener(), this);
         pm.registerEvents(GameHistoryGUI.getListener(), this);
@@ -166,6 +172,8 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
         pm.registerEvents(KitSettingsGUI.getListener(), this);
         pm.registerEvents(VoteGUI.getListener(), this);
         pm.registerEvents(SettingsGUI.getListener(), this);
+        pm.registerEvents(MapEditorGUI.getListener(), this);
+        pm.registerEvents(HologramGUI.getListener(), this);
 
         mysticosSkywars.getShopManagerAPI().loadShopItems();
         mysticosSkywars.getKitManagerAPI().loadKits();
@@ -185,6 +193,10 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
 
         //load leaderboard
         mysticosSkywars.getLeaderboardManagerAPI().refreshLeaderboards();
+
+        //load lobby holograms
+        mysticosSkywars.getLobbyHologramManager().loadHolograms();
+        getLogger().info("Loaded " + mysticosSkywars.getLobbyHologramManager().getAllHolograms().size() + " holograms.");
 
         BukkitCommandManager<CommandSender> commandManager = BukkitCommandManager.create(this);
 
@@ -324,6 +336,7 @@ public class MysticosSkywarsPlugin extends JavaPlugin {
 
     public void onDisable() {
         mysticosSkywars.getMapManagerAPI().endMaps(true);
+        mysticosSkywars.getLobbyHologramManager().stopRefreshTask();
 
         if (MSWConfig.file().getBoolean("Config.Bungeecord.Enabled")) {
             this.getServer().getMessenger().unregisterOutgoingPluginChannel(this, "BungeeCord");

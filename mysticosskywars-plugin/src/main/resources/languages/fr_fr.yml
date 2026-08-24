@@ -137,6 +137,15 @@ fr_fr:
         TNTRain:
           - "&c&lPLUIE DE TNT"
           - "&cAttention à la TNT !"
+        LuckyBlock-Spawn:
+          - "&e&lBLOCS DE CHANCE !"
+          - "&6Des blocs de chance sont apparus autour de vous !"
+        LuckyBlock-Rain:
+          - "&a&lPLUIE DE BLOCS DE CHANCE !"
+          - "&aDes blocs de chance tombent du ciel !"
+        LuckyBlock-Treasure:
+          - "&d&lTRÉSOR DE CHANCE !"
+          - "&dTout le monde reçoit un Bloc de Chance !"
       Title:
         Win: "&b%player% &aa gagné !"
         DeathMatch: "&cLe monde se rétrécit…"
@@ -204,6 +213,10 @@ fr_fr:
       Name: "&eParamètres"
     Save:
       Name: "&aEnregistrer"
+    Holograms:
+      Name: "&dHologrammes &7(Clic Droit)"
+    Map-Editor:
+      Name: "&bÉditeur de Carte &7(Clic Droit)"
     Statistics:
       Name: "&fStatistiques de %player%"
       Lore:

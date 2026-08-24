@@ -42,7 +42,8 @@ public class MSWPlayerScoreboard {
         this.p = r;
         try {
             this.fb = new FastBoard(r.getPlayer());
-            if (MysticosSkywarsAPI.getInstance().getLobbyManagerAPI().getLobbyLocation() != null) {
+            if (MSWConfig.file().getBoolean("Config.Scoreboard.Enabled", true)
+                    && MysticosSkywarsAPI.getInstance().getLobbyManagerAPI().getLobbyLocation() != null) {
                 this.run();
             }
         } catch (final RuntimeException exception) {
@@ -64,6 +65,11 @@ public class MSWPlayerScoreboard {
         if (MSWConfig.file().getBoolean("Config.PlaceholderAPI-In-Scoreboard")) {
             tmp = PlaceholderAPI.setPlaceholders(p.getPlayer(), tmp);
         }
+
+        // Resolve this value for every scoreboard state, including custom lines.
+        tmp = tmp.replace("%playing%", String.valueOf(
+                MysticosSkywarsAPI.getInstance().getPlayerManagerAPI()
+                        .getPlayingPlayers(MapManagerAPI.MapGamemodes.ALL)));
 
         return tmp;
     }
@@ -118,10 +124,12 @@ public class MSWPlayerScoreboard {
                     List<String> send = lista.stream()
                             .map(s -> variables(s, p))
                             .collect(Collectors.toList());
-                    displayScoreboard(variables(tit, p), send);
+                    int maxLines = Math.max(1, MSWConfig.file().getInt("Config.Scoreboard.Max-Lines", 15));
+                    displayScoreboard(variables(tit, p), send.subList(0, Math.min(send.size(), maxLines)));
                 }
             }
-        }.runTaskTimer(MysticosSkywarsAPI.getInstance().getPlugin(), 0L, 20);
+        }.runTaskTimer(MysticosSkywarsAPI.getInstance().getPlugin(), 0L,
+                Math.max(1, MSWConfig.file().getInt("Config.Scoreboard.Update-Interval", 20)));
     }
 
     private void displayScoreboard(String title, List<String> elements) {
@@ -133,8 +141,8 @@ public class MSWPlayerScoreboard {
             if (this.fb == null || this.fb.isDeleted()) {
                 this.fb = new FastBoard(p.getPlayer());
             }
-            this.fb.updateTitle(title);
-            this.fb.updateLines(elements);
+            this.fb.updateTitle(styleTitle(title));
+            this.fb.updateLines(elements.stream().map(this::styleLine).collect(Collectors.toList()));
         } catch (final RuntimeException exception) {
             this.disabled = true;
             if (this.task != null) {
@@ -150,5 +158,26 @@ public class MSWPlayerScoreboard {
             Bukkit.getLogger().warning("FastBoard disabled for " + p.getName()
                     + " because it could not update the scoreboard: " + exception.getMessage());
         }
+    }
+
+    private String styleTitle(String title) {
+        return title
+                .replace("<gradient:#38bdf8:#a78bfa>", "<gradient:#a855f7:#d8b4fe>")
+                .replace("<gray>", "<#4ade80>")
+                .replace("<#38bdf8>", "<#facc15>")
+                .replace("<#a78bfa>", "<#facc15>")
+                .replace("&f", "<#4ade80>")
+                .replace("&b", "<#facc15>");
+    }
+
+    private String styleLine(String line) {
+        return line
+                .replace("<gray>", "<#4ade80>")
+                .replace("<dark_gray>", "<#4ade80>")
+                .replace("<#38bdf8>", "<#facc15>")
+                .replace("<#a78bfa>", "<#facc15>")
+                .replace("&f", "<#4ade80>")
+                .replace("&7", "<#4ade80>")
+                .replace("&b", "<#facc15>");
     }
 }

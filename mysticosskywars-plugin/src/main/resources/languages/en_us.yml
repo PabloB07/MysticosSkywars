@@ -151,6 +151,15 @@ en_us:
         TNTRain:
           - "&c&lTNT RAIN"
           - "&cWatch out for TNT!"
+        LuckyBlock-Spawn:
+          - "&e&lLUCKY BLOCKS!"
+          - "&6Lucky blocks have appeared around you!"
+        LuckyBlock-Rain:
+          - "&a&lLUCKY BLOCK RAIN!"
+          - "&aLucky blocks are falling from the sky!"
+        LuckyBlock-Treasure:
+          - "&d&lLUCKY TREASURE!"
+          - "&dEveryone receives a Lucky Block!"
       Title:
         Win: "&b%player% &awon!"
         DeathMatch: "&cThe world is shrinking..."
@@ -218,6 +227,10 @@ en_us:
       Name: "&eSettings"
     Save:
       Name: "&aSave"
+    Holograms:
+      Name: "&dHolograms &7(Right Click)"
+    Map-Editor:
+      Name: "&eMap Editor &7(Right Click)"
     Statistics:
       Name: "&f%player% &fstatistics"
       Lore:
